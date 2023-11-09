@@ -45,16 +45,28 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   
-    function displayProjects(category) {  
-      const projectsList = projectsData[category] || [];
-      let projectsListHTML = '';
-  
-      for (const project of projectsList) {
-        projectsListHTML += `<li class="data-item" data-date="${project.date}" data-project-id="${project.id}">${project.title}</li>`;
+    function displayProjects(category) {
+        // Hide all project list items first
+        const allProjectListItems = document.querySelectorAll('#projectsList .data-item');
+        allProjectListItems.forEach(item => item.style.display = 'none');
+      
+        // Filter the projects for the selected category
+        const projectsList = projectsData[category] || [];
+        
+        // Display the projects of the selected category
+        projectsList.forEach(project => {
+          const projectListItem = document.querySelector(`li[data-project-id="${project.id}"]`);
+          if (projectListItem) {
+            projectListItem.style.display = ''; // or you can use 'block', 'flex', etc. depending on your layout
+          } else {
+            // If the item doesn't exist, add it to the list
+            const projectListElement = document.querySelector('#projectsList');
+            const listItemHTML = `<li class="data-item" data-date="${project.date}" data-project-id="${project.id}">${project.title}</li>`;
+            projectListElement.insertAdjacentHTML('beforeend', listItemHTML);
+          }
+        });
       }
-  
-      projectsColumn.querySelector('#projectsList').innerHTML = projectsListHTML;
-    }
+      
   
     function loadProjectDetails(projectId) {
         // Extract content_file from projectsData based on projectId

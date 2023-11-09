@@ -96,7 +96,7 @@ html, body {
 .data-item:after {
   content: '>'; /* This is the content of the pseudo-element, the '>' character */
   position: absolute; /* Position the pseudo-element absolutely to its parent .data-item */
-  right: 10px; /* Align to the far right */
+  right: 0; /* Align to the far right */
   top: 50%; /* Align to the vertical middle */
   transform: translateY(-50%); /* Center it perfectly by offsetting by half its height */
 }
