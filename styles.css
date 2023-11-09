@@ -1,0 +1,83 @@
+@font-face {
+  font-family: 'TexGyreHeros'; /* Use a custom name for your font */
+  src: url('texgyreheros/texgyreheros-regular.otf') format('opentype'); /* Specify the path to your .otf font file */
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'TexGyreHeros', sans-serif;
+    font-size: larger;
+}
+
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100vh; /* viewport height */
+}
+  
+/* Base styles for columns */
+.column {
+    flex: 1;
+    overflow-y: auto;
+    margin: 0 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  }
+  
+  /* Responsive design for smaller screens */
+  @media (max-width: 768px) {
+    .columns-container {
+      flex-direction: column;
+      height: 300%; /* Adjust this value to change the total height when stacked */
+    }
+  
+    .column {
+      flex: none; /* Override the flex-grow from flex: 1 */
+      height: 33.333%; /* Each column takes up one-third of the height */
+      width: 100%;
+      margin: 0; /* Reset margin for stacked layout */
+      padding: 10px; /* Adjust padding as needed */
+    }
+  
+  }
+  
+.nav-item {
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .nav-item:hover {
+    color: #0056b3;
+  }
+  
+  #projectsList {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  #projectsList li {
+    cursor: pointer;
+    padding: 5px 0;
+    text-decoration: underline;
+  }
+  
+  #projectsList li:hover {
+    color: #0056b3;
+  }
+  
+  #bioColumn p {
+    color:rgb(74, 74, 74);
+  }
+
+  #bioColumn span {
+    color: black;
+  }
+
+  #bioColumn span:hover {
+    color:lime;
+    filter: blur(2px);
+  }

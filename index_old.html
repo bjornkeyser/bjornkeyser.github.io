@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Björn Keyser</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: auto;
+            justify-content: center;
+
+            /* green: #33FF00 = (51, 255, 0) */
+            /* pink: #F78DB9 = 335 43 97*/
+            /* blue: #00FBFF = 191 100 100*/
+            /* grey: #E8E8E8 */
+        }
+
+        /* Close Button */
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 24px;
+            z-index: 1000;
+        }
+
+        #overlay {
+            position: fixed;
+            background-color: rgba(255, 255, 255, 0.9); /* white with 80% opacity */
+            overflow: hidden;
+            z-index: 9999;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px; /* optional, if you want rounded corners */
+        }
+        #overlay.expand {
+            transform: scale(2); /* End scale */
+        }
+
+        /* Overlay Styles */
+        .overlay-content {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-wrap: wrap;
+            position: relative;  /* Relative positioning to place the close button */
+        }
+
+        /* Left Column */
+        .left-column {
+            width: 50%;
+        }
+
+        /* Right Column */
+        .right-column {
+            width: 50%;
+        }
+
+        /* Title */
+        .overlay-title {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        /* Tags */
+        .overlay-tags {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #777;
+        }
+
+        /* Authors */
+        .overlay-authors {
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        /* Description */
+        .overlay-description {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+
+        /* Banner */
+        .overlay-banner {
+            width: 100%;
+            float: right;
+        }
+        .overlay-banner img {
+            width: 100%;
+        }
+
+        /* Small images */
+        .overlay-small-images img {
+            width: 45%; /* Two images per row */
+            margin: 2.5%; /* A little margin for spacing */
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div id="content"></div>
+    <div id="overlay" class="overlay-content">
+        <!-- Close Button -->
+        <div class="close-button" onclick="closeOverlay()"> X </div>
+    </div>
+    <script>
+        let canvas;
+        let backgroundColor = 232;
+        let cursorSize = 40;
+        let cursorText = '';
+        let cursorTextTag = '';
+        let graphScale = 0.75;
+
+        const portfolioData = [
+            { title: "Black-out Poetry", art: 8, science: 7, image_url: "Content/arraysure1.png", like_factor: 7.5, content_file: "overlay.html", tag: "CODE, BOOK, POETRY"},
+            { title: "Haikuki", art: 8, science: 10, image_url: "Content/haikuki_thumbnail2.png", like_factor: 9, content_file: "haikuki.html", tag: "CODE, BOOK, COOKING" },
+            { title: "Reversing Roles", art: 9, science: 7.5, image_url: "Content/rr1.jpeg", like_factor: 7.75, content_file: "overlay.html", tag: "CODE, BOOK, AI" },
+            { title: "Breath Affects", art: 8.4, science: 7.2, image_url: "Content/breath.gif", like_factor: 8, content_file: "overlay.html", tag: "CODE, NATURE" },
+            { title: "Spatial Whispers", art: 5, science: 6, image_url: "Content/sonicwhispers.png", like_factor: 5, content_file: "overlay.html", tag:"SOUND, INTERACTIVE" },
+            { title: "Textual Tension", art: 7.5, science: 7.5, image_url: "Content/textualtension3.png", like_factor: 8, content_file: "overlay.html", tag: "CODE, INTERACTIVE" },
+            { title: "MetaWHAT!?", art: 8.5, science: 6.5, image_url: "Content/metawhat1.jpeg", like_factor: 8, content_file: "overlay.html", tag: "DESIGN, CODE, DATAVIZ" },
+            { title: "Flocka", art: 9.2, science: 4, image_url: "Content/flockfuck1.png", like_factor: 8, content_file: "overlay.html" , tag:"DESIGN, CODE, NATURE"},
+            { title: "CCA", art: 8, science: 8.5, image_url: "Content/cca.png", like_factor: 8, content_file: "overlay.html", tag:"DESIGN, CODE" },
+            { title: "Split Learning", art: 2, science: 10, image_url: "Content/splitlearning.png", like_factor: 3, content_file: "overlay.html", tag: "PAPER" },
+        ];
+
+        let palette;
+        function preload() {
+        palette = loadImage('Content/palette.png');
+        }
+
+        function setup() {
+            canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent('content');
+            background(backgroundColor);
+            imageMode(CENTER);
+            noCursor(); // Disables the default cursor
+
+            for (let item of portfolioData) {
+                item.img = loadImage(item.image_url, img => {
+                    item.originalWidth = img.width;
+                    item.originalHeight = img.height;
+                    item.isHovering = false;
+                });
+            item.currentScale = 1;  // Initialize currentScale
+            }
+        }
+
+        function draw() {
+            background(backgroundColor);
+            drawGraph(0, graphScale);
+
+        }
+
+        function hoverOnImage(x, y, w, h) {
+            return mouseX > x - w / 2 && mouseX < x + w / 2 && mouseY > y - h / 2 && mouseY < y + h / 2;
+        }
+
+        function drawGraph(col, scale) {
+            let midX = width / 2;
+            let midY = height / 2;
+
+            let deltaX = scale / 2 * width;
+            let deltaY = scale / 2 * height;
+
+            stroke(0);
+            line(midX - deltaX, midY + deltaY, midX + deltaX, midY + deltaY);
+            line(midX - deltaX, midY - deltaY, midX - deltaX, midY + deltaY);
+
+            stroke(150);
+            drawGrid(50);
+
+            // Axis names
+            textSize(25);
+            fill(0);
+            text("s c i e n c e - >", midX, midY + deltaY + 15);
+            push();  // Save current state of canvas
+            translate(midX - deltaX, midY);
+            rotate(-HALF_PI);  // Rotate counterclockwise by 90 degrees
+            fill(0);
+            text("a r t ->", 0, -15);  // Adjust the positioning (-15 in this case) as needed to place it correctly beside the y-axis
+            pop();  // Restore canvas to its state before the push()
+
+            // Reset cursor size and text
+            cursorSize = 40;
+            cursorText = '             ';
+            cursorTextTag = '';
+
+
+            let hoveredItems = [];
+
+            // Draw items that aren't hovered
+            for (let item of portfolioData) {
+                let x = map(item.science, 1,10, midX - deltaX, midX + deltaX);
+                let y = map(item.art, 1,10, midY + deltaY, midY - deltaY);
+
+                let aspectRatio  = item.originalWidth / item.originalHeight;
+
+                // Set the new width and calculate the new height while preserving the aspect ratio
+                item.newWidth = map(item.like_factor, 1,10, 100, 300);
+                item.newHeight = item.newWidth / aspectRatio;
+
+                item.isHovering = hoverOnImage(x, y, item.newWidth, item.newHeight);
+
+                if (!item.isHovering) {
+                    item.currentScale = lerp(item.currentScale, 1, 0.1);
+                    let displayWidth = item.newWidth * item.currentScale;
+                    let displayHeight = item.newHeight * item.currentScale;
+                    image(item.img, x, y, displayWidth, displayHeight);
+                } else {
+                    hoveredItems.push(item);
+                    // Change text when hovering
+                    cursorText = item.title;
+                    cursorTextTag = item.tag;
+
+                }
+            }
+
+            // Now draw the hovered items
+            for (let item of hoveredItems) {
+                let x = map(item.science, 1,10, midX - deltaX, midX + deltaX);
+                let y = map(item.art, 1,10, midY + deltaY, midY - deltaY);
+                
+                // Increment currentScale towards 1.2
+                item.currentScale = lerp(item.currentScale, 1.2, 0.1);
+
+                let displayWidth = item.newWidth * item.currentScale;
+                let displayHeight = item.newHeight * item.currentScale;
+
+                image(item.img, x, y, displayWidth, displayHeight);
+            }
+
+            drawMouse();
+        }
+
+        function drawGrid(spacing) {
+            let midX = width / 2;
+            let midY = height / 2;
+
+            let deltaX = graphScale / 2 * width;
+            let deltaY = graphScale / 2 * height;
+
+            for (let x = midX - deltaX; x <= midX + deltaX; x += spacing) {
+                for (let y = midY - deltaY; y <= midY + deltaY; y += spacing) {
+                    drawPlusSign(x, y, 10);  // Draws a "+" sign with a size of 10 pixels
+                }
+            }
+        }
+
+        function drawPlusSign(x, y, size) {
+            line(x - size / 2, y, x + size / 2, y);  // Horizontal line
+            line(x, y - size / 2, x, y + size / 2);  // Vertical line
+        }
+
+
+        function drawMouse() {
+            fill(51, 255, 0); // Green
+            noStroke(); // No outline
+            let ellipseRad = max(textWidth(cursorText), textWidth(cursorTextTag)) * .6;
+            ellipse(mouseX, mouseY, ellipseRad, ellipseRad); // Draw a circle at the mouse position
+
+            // Add text
+            fill(255); // White text
+            textAlign(CENTER, CENTER);
+            textSize(18);
+            text(cursorText, mouseX, mouseY);
+            textSize(12);
+            text(cursorTextTag, mouseX, mouseY + 14);
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+
+        function mouseClicked() {
+            for (let item of portfolioData) {
+                let midX = width / 2;
+                let midY = height / 2;
+                let deltaX = graphScale / 2 * width;
+                let deltaY = graphScale / 2 * height;
+
+                let x = map(item.science, 1, 10, midX - deltaX, midX + deltaX);
+                let y = map(item.art, 1, 10, midY + deltaY, midY - deltaY);
+                
+                if (hoverOnImage(x, y, item.newWidth, item.newHeight)) {
+                    console.log("testikel");
+                    loadContent(item.content_file, x, y);
+                    break; // Exit the loop once we find a hovered image
+                } else {
+                    console.log("aaaa");
+                    // loadContent("haikuki.html");
+                }
+            }
+        }
+
+        document.addEventListener('click', function(event) {
+            const overlay = document.getElementById('overlay');
+            // Check if the click is outside the overlay
+            if (!event.target.closest('.overlay-content')) {
+                // Hide the overlay
+                overlay.style.display = 'none';
+            }
+        }, true);  // The last parameter "true" specifies that the event should be captured in the capturing phase
+
+
+        function loadContent(filePath, x, y) {
+            console.log(filePath);
+            fetch(filePath)
+                .then(response => response.text())
+                .then(data => {
+                const overlay = document.getElementById('overlay');
+                overlay.innerHTML += data;
+
+                // Once the overlay is displayed, stop propagation of click events to prevent immediate closure
+                overlay.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+
+
+                // Start from the mouse click position
+                overlay.style.left = `${mouseX}px`;
+                overlay.style.top = `${mouseY}px`;
+                overlay.style.width = `0px`;
+                overlay.style.height = `0px`;
+                overlay.style.display = 'block';
+                overlay.style.overflow = 'auto';
+
+                // Trigger reflow to make sure transition happens
+                void overlay.offsetWidth;
+
+                // Set to 90% of window size and center it
+                overlay.style.width = `${windowWidth * 0.9}px`;
+                overlay.style.height = `${windowHeight * 0.9}px`;
+                overlay.style.left = `${windowWidth * 0.05}px`;
+                overlay.style.top = `${windowHeight * 0.05}px`;
+
+                // Add transition property after initial setting
+                overlay.style.transition = 'all 0.5s ease-in-out';
+            })
+            .catch(error => {
+                console.error("There was an error loading the content file:", error);
+            });
+    }
+
+    function closeOverlay() {
+            const overlayContent = document.querySelector('.overlay-content');
+            overlayContent.style.display = 'none';
+    }
+
+
+    </script>
+</body>
+
+</html>

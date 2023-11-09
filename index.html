@@ -1,55 +1,45 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2299.7">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000; min-height: 14.0px}
-    span.s1 {font-kerning: none}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Website</title>
+<link rel="stylesheet" href="styles.css">
+<script src="script.js" defer></script>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="en"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;Simple p5.js Page&lt;/title&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;style&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>/* Add any styling you wish here */</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// p5.js sketch</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function setup() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>createCanvas(400, 200);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background(220);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function draw() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>ellipse(width/2, height/2, 50, 50);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Click event for the p5.js canvas</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function mouseClicked() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>alert('Canvas clicked!');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// Call any other function or add vanilla JavaScript code here</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>executeOnCanvasClick();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Vanilla JavaScript function</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function executeOnCanvasClick() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>console.log('p5.js canvas was clicked!');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// Add more logic if needed</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+
+<div class="wrapper">
+  <div class="column" id="bioColumn">
+    <!-- <h2>About Me</h2> -->
+    <p id="aboutText">
+        <!-- Björn Keyser is a multidisciplinary artist & researcher. 
+            i know, boooo buzzwords, but I simply could never choose between the 2. 
+            My boredom with computer science led me to research [design using code], as well as [data visualization & interaction]. 
+            I also have a lifelong interest in [consciousness] which led me to study the minds of slime molds, fireflies, plants, and humans. 
+            When in doubt of your own consciousness, always remember that we are the only ones capable of creativity, a computer can't be.. or [can it]? -->
+        Björn Keyser is a multidisciplinary artist & researcher (booo buzzwords, I know). I diverged from the typical path of a computer scientist when I found the chaotic beauty of 
+        <span data-category="design-code">[design using code]</span> and the storytelling power of 
+        <span data-category="data-visualization-interaction">[data visualization & interaction]</span>. Fascinated by the enigma of 
+        <span data-category="consciousness">[consciousness]</span>, I've delved into the minds of the most unassuming subjects: from slime molds to plants to hacking own brain. 
+        Pondering our consciousness, one might conclude that a computer couldn't possibly share this trait because it lacks creativity... but then, 
+        <span data-category="ai-creativity">[does it?]</span>
+      </p>
+    <!-- Add more bio content here -->
+  </div>
+  <div class="column" id="projectsColumn">
+    <!-- <h2>Projects</h2> -->
+    <ul id="projectsList">
+      <!-- Project items will be appended here -->
+    </ul>
+  </div>
+  <div class="column" id="detailsColumn">
+    <!-- <h2>Project Details</h2> -->
+    <div id="projectDetails">
+      <!-- Project details will be shown here -->
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
