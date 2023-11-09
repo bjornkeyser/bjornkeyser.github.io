@@ -1,5 +1,5 @@
 @font-face {
-  font-family: 'TexGyreHeros'; /* Use a custom name for your font */
+  font-family: 'TexGyreHeros', sans-serif; /* Use a custom name for your font */
   src: url('texgyreheros/texgyreheros-regular.otf') format('opentype'); /* Specify the path to your .otf font file */
 }
 
@@ -13,36 +13,58 @@ html, body {
 
 .wrapper {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     height: 100vh; /* viewport height */
 }
   
 /* Base styles for columns */
 .column {
+    position: relative;
     flex: 1;
+    height: 100vh;
     overflow-y: auto;
     margin: 0 10px;
-    padding-left: 0px;
+    padding-left: 10px;
     padding-right: 0px;
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
   }
+
+#bioColumn {
+    border-right: 1px solid #ccc; /* Adjust the color and size as needed */
+}
+
   
-  /* Responsive design for smaller screens */
-  @media (max-width: 768px) {
-    .columns-container {
-      flex-direction: column;
-      height: 300%; /* Adjust this value to change the total height when stacked */
-    }
-  
-    .column {
-      flex: none; /* Override the flex-grow from flex: 1 */
-      height: 33.333%; /* Each column takes up one-third of the height */
-      width: 100%;
-      margin: 0; /* Reset margin for stacked layout */
-      padding: 10px; /* Adjust padding as needed */
-    }
-  
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column;
+    height: 100%; /* Adjust this value to change the total height when stacked */
   }
+
+  .column {
+    flex: none; /* Override the flex-grow from flex: 1 */
+    height: 33.333%; /* Each column takes up one-third of the height */
+    width: 100%;
+    margin: 0; /* Reset margin for stacked layout */
+    padding: 10px; /* Adjust padding as needed */
+    border-bottom: 1px solid #000;
+  }
+
+  .column:last-child {
+    border-bottom: none; /* Remove bottom border for the last column */
+  }
+
+}
+
+/* Styles that center the <li> elements vertically in their container */
+@media (min-width: 768px) { /* Adjust 768px to the breakpoint at which your phone mode ends */
+  .data-container { /* This should be the class of the container of your <li> elements */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh; /* This makes the container the full height of the viewport */
+  }
+}
   
 .nav-item {
     color: #007bff;
@@ -54,30 +76,67 @@ html, body {
     color: #0056b3;
   }
   
-  #projectsList {
-    list-style-type: none;
-    padding: 0;
-  }
+#projectsList {
+  list-style-type: none;
+  padding: 0;
+}
   
-  #projectsList li {
-    cursor: pointer;
-    padding: 5px 0;
-    text-decoration: underline;
-  }
-  
-  #projectsList li:hover {
-    color: #0056b3;
-  }
-  
-  #bioColumn p {
-    color:rgb(74, 74, 74);
-  }
+#projectsList li {
+  cursor: pointer;
+  padding: 5px 0;
+  text-decoration: underline;
+}
 
-  #bioColumn span {
-    color: black;
-  }
+.data-item {
+  position: relative; /* This makes sure that the pseudo-element is positioned relative to the li */
+  padding-right: 20px; /* Adjust as needed to give space for the '>' */
+}
 
-  #bioColumn span:hover {
-    color:lime;
+/* Add the '>' after each .data-item */
+.data-item:after {
+  content: '>'; /* This is the content of the pseudo-element, the '>' character */
+  position: absolute; /* Position the pseudo-element absolutely to its parent .data-item */
+  right: 10px; /* Align to the far right */
+  top: 50%; /* Align to the vertical middle */
+  transform: translateY(-50%); /* Center it perfectly by offsetting by half its height */
+}
+
+* {
+  transition: color 0.3s ease; /* Optional: for smooth color transition */
+}
+  
+p span:hover {
+  color: lime;
+}
+
+span:hover,
+li:hover {
+    color: lime;
     filter: blur(2px);
-  }
+}
+
+.timeline {
+  position: absolute;
+  left: 5px; /* Stick to the left edge of the third column */
+  top: 0; /* Adjust this as necessary */
+  bottom: 0; /* Adjust this as necessary */
+  width: 2px; /* Width of the timeline */
+  z-index: 10; /* Ensure it's above other elements */
+  border-left: 1px solid #ccc; /* This is the timeline */
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -5px; /* Centers the dot on the timeline */
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: lime;
+  z-index: 11;
+  /* Initially we don't know where to position the dots, 
+     so we leave out the 'top' property. */
+}
+
+.timeline-dot.active {
+  background-color: #f00; /* Active color */
+}
