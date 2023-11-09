@@ -82,11 +82,25 @@ html, body {
 }
   
 #projectsList li {
+  position:relative;
+  z-index: 2;
   cursor: pointer;
   padding: 5px 0;
   text-decoration: underline;
 }
 
+#imagePreview {
+  display: none; /* Hide by default */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the image */
+  z-index: 1; /* Lower than the list items but not negative */
+  max-width: 100%; /* Ensure it doesn't overflow the column */
+  max-height: 100%; /* Ensure it doesn't overflow the column */
+  pointer-events: none; /* Prevents the image from capturing mouse events */
+}
+  
 .data-item {
   position: relative; /* This makes sure that the pseudo-element is positioned relative to the li */
   padding-right: 20px; /* Adjust as needed to give space for the '>' */
@@ -96,7 +110,7 @@ html, body {
 .data-item:after {
   content: '>'; /* This is the content of the pseudo-element, the '>' character */
   position: absolute; /* Position the pseudo-element absolutely to its parent .data-item */
-  right: 0; /* Align to the far right */
+  right: 20px; /* Align to the far right */
   top: 50%; /* Align to the vertical middle */
   transform: translateY(-50%); /* Center it perfectly by offsetting by half its height */
 }
@@ -117,26 +131,65 @@ li:hover {
 
 .timeline {
   position: absolute;
-  left: 5px; /* Stick to the left edge of the third column */
+  right: 5px; /* Stick to the left edge of the third column */
   top: 0; /* Adjust this as necessary */
   bottom: 0; /* Adjust this as necessary */
   width: 2px; /* Width of the timeline */
   z-index: 10; /* Ensure it's above other elements */
-  border-left: 1px solid #ccc; /* This is the timeline */
+  border-right: 1px solid #ccc; /* This is the timeline */
 }
 
 .timeline-dot {
   position: absolute;
-  left: -5px; /* Centers the dot on the timeline */
+  right: -5px; /* Centers the dot on the timeline */
   width: 10px;
   height: 10px;
   border-radius: 50%;
   background-color: lime;
   z-index: 11;
+  border: 2px solid transparent; /* Invisible border to prevent movement when active */
   /* Initially we don't know where to position the dots, 
      so we leave out the 'top' property. */
 }
 
-.timeline-dot.active {
-  background-color: #f00; /* Active color */
+.timeline-entry {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse; /* This ensures the timestamp is on the left */
+}
+
+.timeline-dot.active + .timeline-timestamp {
+  display: block;
+  border-color: red; /* Change just the color, not the border size */
+}
+
+.timeline-dot.active, .timeline-dot:hover{
+  background-color: red ;
+  /* right: -7 px;
+  width: 14px;
+  height: 14px; */
+}
+
+
+
+.timeline-timestamp {
+  position: absolute;
+  right: 100%; /* This positions the timestamp to the left of the dot */
+  white-space: nowrap;
+  display: none;
+  margin-right: 12px; /* Adjust spacing between the timestamp and the dot */
+}
+
+.project-image-preview {
+  display: none; /* Hide by default */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the image */
+  z-index: 5; /* Ensure it's below the text */
+  max-width: 100%; /* Ensure it doesn't overflow the column */
+  max-height: 100%; /* Ensure it doesn't overflow the column */
+  pointer-events: none; /* Prevents the image from capturing mouse events */
 }
