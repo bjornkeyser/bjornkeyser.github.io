@@ -2,7 +2,7 @@
 const projectsData = {
 'design-code': [
     { title: "breath affects", id: 4, image_url: "Content/breath.gif", like_factor: 8, content_file: "breathaffects.html", date:"2022-03-24"},
-    { title: "flocka", id: 8, image_url: "Content/flockfuck1.png", like_factor: 8, content_file: "flocka.html", date:""},
+    { title: "flocka", id: 8, image_url: "Content/flockfuck1.png", like_factor: 8, content_file: "flocka.html", date:"2021-07-01"},
     { title: "TUNER", id: 15, image_url: "Content/tuner.png", like_factor: 8, content_file: "tuner.html", date:"2022-08-08"},
     { title: "cca", id: 9, image_url: "Content/cca.png", like_factor: 8, content_file: "cca.html", date:"2022-08-10"}],
 'data-visualization-interaction': [
@@ -13,8 +13,8 @@ const projectsData = {
 'consciousness': [
     { title: "screaming plants", id: 11, image_url: "", like_factor: 7, content_file: "screamingplants.html", date:"2023-02-01"},
     { title: "delay", id: 12, image_url: "", like_factor: 9, content_file: "delay.html", date:"2023-07-06"},
-    { title: "human magnetoreception - draft", id: 13, image_url: "", like_factor: 9, content_file: "magnetoreception.html", date:""},
-    { title: "physarum", id: 14, image_url: "", like_factor: 9, content_file: "physarum.html", date:"2022-09-26"},
+    { title: "human magnetoreception - draft", id: 13, image_url: "", like_factor: 9, content_file: "magnetoreception.html", date:"2024-06-04"},
+    { title: "physarum", id: 14, image_url: "Content/physarum.png", like_factor: 9, content_file: "physarum.html", date:"2022-09-26"},
 
 ],
 'ai-creativity': [
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     
         // Base path for content files
-        const contentBasePath = '';
+        const contentBasePath = 'subpages/';
     
         if (contentFile) {
           fetch(`${contentBasePath}${contentFile}`)
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const itemDate = new Date(item.dataset.date);
         
             // Calculate the position of the dot based on the date
-            const position = ((maxDate - itemDate) / dateRange) * 95;
+            const position = ((maxDate - itemDate) / dateRange) * 95 + 2;
             entry.style.top = `${position}%`;
         
             // Append the timestamp and the dot to the entry
