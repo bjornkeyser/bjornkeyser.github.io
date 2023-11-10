@@ -3,37 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio Website</title>
+<title>Björn Keyser</title>
 <link rel="stylesheet" href="styles.css">
 <script src="script.js" defer></script>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="turnjs4/lib/turn.js"></script>
-
-<style>
-    .flipbook {
-        width: 400px;
-        height: 300px;
-    }
-    .flipbook .page {
-        width: 100%;
-        height: 100%;
-        background-color: white;
-        border: 1px solid #cccccc;
-        line-height: 300px;
-        text-align: center;
-        font-size: 24px;
-    }
-    .flipbook .page img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* This will ensure that the aspect ratio is maintained */
-    }
-</style>
-
 </head>
 <body>
 
 <div class="wrapper">
+<div id="overlay" style="display: none;">
+    <img id="overlay-image" src="" alt="Expanded Image">
+</div> 
+   
   <div class="column" id="bioColumn">
     <p id="aboutText">
         <!-- Björn Keyser is a multidisciplinary artist & researcher. 
@@ -41,10 +23,10 @@
             My boredom with computer science led me to research [design using code], as well as [data visualization & interaction]. 
             I also have a lifelong interest in [consciousness] which led me to study the minds of slime molds, fireflies, plants, and humans. 
             When in doubt of your own consciousness, always remember that we are the only ones capable of creativity, a computer can't be.. or [can it]? -->
-        <span class="title">BJöRN KEYSER</span> is a multidisciplinary artist & researcher (booo buzzwords, I know). He diverged from the typical path of a computer scientist when he found the chaotic beauty of 
+        <span class="title">BJöRN KEYSER</span> is an artist & researcher. He diverged from the typical path of computer science when he found the chaos of 
         <span data-category="design-code">[design using code]</span> and the storytelling power of 
         <span data-category="data-visualization-interaction">[data visualization & interaction]</span>. Fascinated by the enigma of 
-        <span data-category="consciousness">[consciousness]</span>, he's delved into the minds of the most unassuming subjects: from slime molds to plants to hacking own brain. 
+        <span data-category="consciousness">[consciousness]</span>, he's researched the minds of a myriad of subjects: from slime molds to plants to computers to his own brain. 
         Pondering our consciousness, one might conclude that a computer couldn't possibly share this trait because it lacks creativity... but then, 
         <span data-category="ai-creativity">[does it?]</span>
         
@@ -57,15 +39,15 @@
         <ul id="projectsList">
         <!-- Project items will be appended here -->
             <li class="data-item" data-date="2022-03-24" data-project-id="4" style="display:none">breath affects</li>
-            <li class="data-item"  data-project-id="8" style="display:none">flocka</li>
-            <li class="data-item" data-date="2022-08-08" data-project-id="15" style="display:none">TUNER</li>
+            <li class="data-item"  data-date="2021-07-01" data-project-id="8" style="display:none">flocka</li>
+            <li class="data-item" data-date="2023-10-02" data-project-id="15" style="display:none">TUNER</li>
             <li class="data-item" data-date="2022-08-10" data-project-id="9" style="display:none">cca</li>
             <li class="data-item" data-date="2022-04-26" data-project-id="5" style="display:none">spatial whispers</li>
             <li class="data-item" data-date="2022-06-09" data-project-id="6" style="display:none">textual tension</li>
-            <li class="data-item" data-date="2022-06-01" data-project-id="7" style="display:none">metaWHAT!?</li>
+            <li class="data-item" data-date="2022-08-01" data-project-id="7" style="display:none">metaWHAT!?</li>
             <li class="data-item" data-date="2023-02-01" data-project-id="11" style="display:none">screaming plants</li>
             <li class="data-item" data-date="2023-07-06" data-project-id="12" style="display:none">delay</li>
-            <li class="data-item"  data-project-id="13" style="display:none">human magnetoreception - draft</li>
+            <li class="data-item" data-date="2024-06-04" data-project-id="13" style="display:none">human magnetoreception - draft</li>
             <li class="data-item" data-date="2022-09-26" data-project-id="14" style="display:none">physarum</li>
             <li class="data-item" data-date="2022-10-15" data-project-id="1" style="display:none">blackout poetry</li>
             <li class="data-item" data-date="2022-11-02" data-project-id="2" style="display:none">haikuki</li>

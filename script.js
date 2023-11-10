@@ -3,16 +3,16 @@ const projectsData = {
 'design-code': [
     { title: "breath affects", id: 4, image_url: "Content/breath.gif", like_factor: 8, content_file: "breathaffects.html", date:"2022-03-24"},
     { title: "flocka", id: 8, image_url: "Content/flockfuck1.png", like_factor: 8, content_file: "flocka.html", date:"2021-07-01"},
-    { title: "TUNER", id: 15, image_url: "Content/tuner.png", like_factor: 8, content_file: "tuner.html", date:"2022-08-08"},
+    { title: "TUNER", id: 15, image_url: "Content/tuner_letgo.png", like_factor: 8, content_file: "tuner.html", date:"2022-08-08"},
     { title: "cca", id: 9, image_url: "Content/cca.png", like_factor: 8, content_file: "cca.html", date:"2022-08-10"}],
 'data-visualization-interaction': [
     { title: "spatial whispers", id: 5, image_url: "Content/sonicwhispers.png", like_factor: 5, content_file: "spatialwhispers.html", date:"2022-04-26"}, 
     { title: "textual tension", id: 6, image_url: "Content/textualtension3.png", like_factor: 8, content_file: "textualtension.html", date:"2022-06-09" },
-    { title: "metaWHAT!?", id: 7, image_url: "Content/metawhat1.jpeg", like_factor: 8, content_file: "metawhat.html", date:"2022-06-01"}
+    { title: "metaWHAT!?", id: 7, image_url: "Content/metawhat1.jpeg", like_factor: 8, content_file: "metawhat.html", date:"2022-07-01"}
 ],
 'consciousness': [
-    { title: "screaming plants", id: 11, image_url: "", like_factor: 7, content_file: "screamingplants.html", date:"2023-02-01"},
-    { title: "delay", id: 12, image_url: "", like_factor: 9, content_file: "delay.html", date:"2023-07-06"},
+    { title: "screaming plants", id: 11, image_url: "Content/screamingplants.png", like_factor: 7, content_file: "screamingplants.html", date:"2023-02-01"},
+    { title: "delay", id: 12, image_url: "Content/delay_screenshot.png", like_factor: 9, content_file: "delay.html", date:"2023-07-06"},
     { title: "human magnetoreception - draft", id: 13, image_url: "", like_factor: 9, content_file: "magnetoreception.html", date:"2024-06-04"},
     { title: "physarum", id: 14, image_url: "Content/physarum.png", like_factor: 9, content_file: "physarum.html", date:"2022-09-26"},
 
@@ -107,7 +107,36 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           projectDetails.innerHTML = `<p>Project information not found.</p>`;
         }
-      }
+
+        // Event delegation for images inside detailsColumn
+        document.getElementById('detailsColumn').addEventListener('click', function(event) {
+            // Check if the clicked element is an image
+            if (event.target.tagName === 'IMG') {
+                console.log('Image clicked: ', event.target.src); // Debugging log
+                openOverlay(event.target.src);
+            }
+        });
+        // Find flipbooks and adjust their size after image loads
+        const flipbooks = document.querySelectorAll('.flipbook');
+        flipbooks.forEach(flipbook => {
+            adjustFlipbookAfterImageLoad(flipbook);
+        });
+
+    }
+
+    // Function to open the overlay with the clicked image
+    function openOverlay(src) {
+        document.getElementById('overlay').style.display = 'flex';
+        document.getElementById('overlay-image').src = src;
+    }
+
+    // Function to close the overlay
+    function closeOverlay() {
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    // Add click event listener to overlay for closing
+    document.getElementById('overlay').addEventListener('click', closeOverlay);
 
     function displayTimeLine() {
         // timeline stuff
@@ -195,22 +224,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     displayTimeLine();
-
-    document.querySelectorAll('#projectsList li').forEach(item => {
-        item.addEventListener('mouseenter', function() {
-          // Retrieve the project ID from the data attribute of the hovered list item
-          const projectId = this.getAttribute('data-project-id');
       
-          // Find the project data by searching through each category
-          let projectData;
-          for (const category in projectsData) {
+    function showProjectImage(projectId) {
+        // Find the project data by searching through each category
+        let projectData;
+        for (const category in projectsData) {
             projectData = projectsData[category].find(project => project.id.toString() === projectId);
             if (projectData) {
-              break; // If we've found the project, exit the loop
+                break; // If we've found the project, exit the loop
             }
-          }
-      
-          if (projectData && projectData.image_url) {
+        }
+    
+        if (projectData && projectData.image_url) {
             const imagePreview = document.getElementById('imagePreview');
             // Clear previous content
             imagePreview.innerHTML = '';
@@ -225,17 +250,71 @@ document.addEventListener('DOMContentLoaded', () => {
             // Append the new img element
             imagePreview.appendChild(img);
             imagePreview.style.display = 'block'; // Show the image container
-          }
-        });
-            
-        item.addEventListener('mouseleave', function() {
-          // On mouse leave, hide the image container and clear the background
-          const imagePreview = document.getElementById('imagePreview');
-          imagePreview.style.display = 'none'; // Hide the image container
-          imagePreview.style.backgroundImage = ''; // Clear the background image
-        });
-      });
+        }
+    }
+
+    function clearProjectImages() {
+        const imagePreview = document.getElementById('imagePreview');
+        imagePreview.innerHTML = ''; // Clear all appended images
+      }
       
-            
-  });
+
+    // Add event listeners to project list items
+    document.querySelectorAll('#projectsList li').forEach(item => {
+        item.addEventListener('mouseenter', function() {
+        const projectId = this.getAttribute('data-project-id');
+        showProjectImage(projectId);
+        });
+    
+        item.addEventListener('mouseleave', clearProjectImages);
+        
+    });
+    
+    // Add event listeners to timeline dots
+    document.querySelectorAll('.timeline-dot').forEach(dot => {
+        dot.addEventListener('mouseenter', function() {
+            const projectId = this.getAttribute('data-project-id');
+            showProjectImage(projectId);
+
+            // Show the timestamp associated with the dot
+            const timestamp = this.previousSibling; // Assuming the timestamp is the next sibling
+            if (timestamp) { 
+                timestamp.style.display = 'block'; // Show the timestamp
+            }
+        });
+        dot.addEventListener('mouseleave', function() {
+            clearProjectImages();
+        
+            // Hide the timestamp
+            const timestamp = this.previousSibling; // Assuming the timestamp is the next sibling
+            if (timestamp) {
+              timestamp.style.display = 'none'; // Hide the timestamp
+            }
+        });            
+    });     
+    function adjustFlipbookAfterImageLoad(flipbook) {
+        const images = flipbook.querySelectorAll('img');
+        let imagesLoaded = 0;
+    
+        images.forEach(img => {
+            img.onload = () => {
+                imagesLoaded++;
+                if (imagesLoaded === images.length) {
+                    // All images have loaded, adjust the height
+                    const maxHeight = window.innerHeight * 0.7;
+                    if (flipbook.scrollHeight > maxHeight) {
+                        flipbook.style.height = `${maxHeight}px`;
+                    } else {
+                        flipbook.style.height = 'auto';
+                    }
+                }
+            };
+    
+            // If the image is already loaded (cached), manually trigger onload
+            if (img.complete) {
+                img.onload();
+            }
+        });
+    }  
+});
   

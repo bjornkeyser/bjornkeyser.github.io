@@ -13,7 +13,33 @@ html, body {
 }
 
 .title{
-  text-shadow: 2px 2px 4px grey;
+  text-shadow: 2px 2px 4px #F78DB9;
+}
+
+.tags{
+  font-size:small;
+  color: #F78DB9;
+}
+
+.tags::before {
+  content: '[';
+}
+
+.tags::after {
+  content: ']';
+}
+
+.subtitle{
+  font-size: medium;
+  color: #6a6a6a;
+}
+
+#aboutText span{
+  color: lime;
+}
+
+#aboutText .title {
+  color: black;
 }
 
 .wrapper {
@@ -25,7 +51,8 @@ html, body {
 /* Base styles for columns */
 .column {
     position: relative;
-    flex: 1;
+    display: flex;
+    flex-grow: 1;
     height: 100vh;
     overflow-y: auto;
     margin: 0 10px;
@@ -34,11 +61,34 @@ html, body {
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
   }
 
+#bioColumn, #projectsColumn {
+  flex: 0 0 25%;
+}
+
 #bioColumn {
     border-right: 1px solid #ccc; /* Adjust the color and size as needed */
 }
 
-  
+#detailsColumn {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Adjust the gap between items */
+  padding: 10px; /* Optional padding */
+}
+
+#detailsColumn img, #detailsColumn video {
+  flex: 1 1 calc(50% - 5px); /* Take up half the width minus half the gap */
+  max-width: calc(50% - 5px); /* Ensures items don't grow beyond half the width */
+  height: auto; /* Maintain aspect ratio */
+}
+
+/* Target the last image if it is the only child of its type */
+#detailsColumn img:last-of-type:nth-of-type(odd),
+#detailsColumn video:last-of-type:nth-of-type(odd) {
+  flex-basis: 100%; /* If it's the last and odd item, take full width */
+  max-width: 100%;
+}
+
 /* Responsive design for smaller screens */
 @media (max-width: 768px) {
   .wrapper {
@@ -113,7 +163,7 @@ html, body {
 
 /* Add the '>' after each .data-item */
 .data-item:after {
-  content: '>'; /* This is the content of the pseudo-element, the '>' character */
+  content: ''; /* This is the content of the pseudo-element, the '>' character */
   position: absolute; /* Position the pseudo-element absolutely to its parent .data-item */
   right: 20px; /* Align to the far right */
   top: 50%; /* Align to the vertical middle */
@@ -167,17 +217,15 @@ li:hover {
 
 .timeline-dot.active + .timeline-timestamp {
   display: block;
-  border-color: red; /* Change just the color, not the border size */
+  border-color: #F78DB9; /* Change just the color, not the border size */
 }
 
 .timeline-dot.active, .timeline-dot:hover{
-  background-color: red ;
+  background-color: #F78DB9 ;
   /* right: -7 px;
   width: 14px;
   height: 14px; */
 }
-
-
 
 .timeline-timestamp {
   position: absolute;
@@ -185,6 +233,7 @@ li:hover {
   white-space: nowrap;
   display: none;
   margin-right: 12px; /* Adjust spacing between the timestamp and the dot */
+  background-color: white;
 }
 
 .project-image-preview {
@@ -205,3 +254,42 @@ li:hover {
   /* Other styles if needed */
 }
 
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent black background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* High z-index to ensure it's above everything else */
+}
+
+#overlay img {
+  max-width: 80%; /* Adjust as needed */
+  max-height: 80%; /* Adjust as needed */
+  margin: auto; /* Center the image */
+}
+
+.flipbook {
+  width: 100%; /* Full width of the parent container */
+  max-width: 100%; /* Prevent exceeding the parent container's width */
+  max-height: 70vh; /* Maximum height */
+  overflow-y: auto; /* Adds scroll if content overflows */
+  margin-bottom: 10px; /* Space between flipbooks */
+  /* Remove object-fit as it's not necessary here */
+}
+
+.flipbook .page {
+  background-color: white;
+  border: 1px solid #cccccc;
+  /* Let the content determine the height */
+}
+
+.flipbook .page img {
+  max-width: 100%;
+  height: auto; /* Maintain aspect ratio of images */
+  object-fit: cover; /* Cover the page */
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three Column Layout</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .column {
+            flex-grow: 1; /* Allows columns to grow and fill the available space */
+            border-right: 1px solid black; /* Visual separator between columns */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .middle-column, .first-column {
+            flex: 0 0 25%; /* Sets the middle column to 1/6th of the container without growing */
+        }
+
+        .column:last-child {
+            border-right: none; /* Removes border from the last column */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="column first-column">Column 1</div>
+        <div class="column middle-column">Column 2 (Middle)</div>
+        <div class="column">Column 3</div>
+    </div>
+</body>
+</html>
