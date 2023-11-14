@@ -22,6 +22,10 @@ const projectsData = {
     { title: "haikuki", id: 2, image_url: "Content/haikuki_thumbnail2.png", like_factor: 9, content_file: "haikuki.html", date:"2022-11-02"},
     { title: "reversing roles", id: 3, image_url: "Content/rr1.jpeg", like_factor: 7.75, content_file: "reversingroles.html", date: "2022-12-30" },
     { title: "split learning", id: 10, image_url: "Content/splitlearning.png", like_factor: 3, content_file: "splitlearning.html", date:"2021-07-01"}
+],
+'computer-science': [
+    { title: "split learning for finance", id: 10, image_url: "Content/splitlearning.png", like_factor: 3, content_file: "splitlearning.html", date:"2021-07-01"},
+    { title: "vertical split learning", id: 16, image_url: "Content/verticalsplitlearning.png", like_factor: 3, content_file: "verticalsplitlearning.html", date:"2022-09-30"}
 ]
 }; 
 
@@ -41,7 +45,13 @@ document.addEventListener('DOMContentLoaded', () => {
     projectsColumn.addEventListener('click', function(event) {
       if (event.target.tagName === 'LI') {
         const projectId = event.target.getAttribute('data-project-id');
+        // First call to load project details
         loadProjectDetails(projectId);
+
+        // Second call to load project details after a short delay
+        setTimeout(() => {
+            loadProjectDetails(projectId);
+        }, 100); // Adjust delay as needed
       }
     });
   
@@ -116,12 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 openOverlay(event.target.src);
             }
         });
-        // Find flipbooks and adjust their size after image loads
-        const flipbooks = document.querySelectorAll('.flipbook');
-        flipbooks.forEach(flipbook => {
-            adjustFlipbookAfterImageLoad(flipbook);
-        });
-
+        
     }
 
     // Function to open the overlay with the clicked image
@@ -292,29 +297,34 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });            
     });     
-    function adjustFlipbookAfterImageLoad(flipbook) {
+
+    function adjustFlipbookSize(flipbook) {
         const images = flipbook.querySelectorAll('img');
-        let imagesLoaded = 0;
+        let loadedImagesCount = 0;
     
         images.forEach(img => {
-            img.onload = () => {
-                imagesLoaded++;
-                if (imagesLoaded === images.length) {
-                    // All images have loaded, adjust the height
-                    const maxHeight = window.innerHeight * 0.7;
-                    if (flipbook.scrollHeight > maxHeight) {
-                        flipbook.style.height = `${maxHeight}px`;
-                    } else {
-                        flipbook.style.height = 'auto';
+            if (img.complete && img.naturalHeight !== 0) {
+                // Image is already loaded
+                loadedImagesCount++;
+            } else {
+                // Wait for the image to load
+                img.addEventListener('load', () => {
+                    loadedImagesCount++;
+                    if (loadedImagesCount === images.length) {
+                        // All images in this flipbook are loaded, adjust the size
+                        const maxHeight = window.innerHeight * 0.7;
+                        flipbook.style.height = flipbook.scrollHeight > maxHeight ? `${maxHeight}px` : 'auto';
                     }
-                }
-            };
-    
-            // If the image is already loaded (cached), manually trigger onload
-            if (img.complete) {
-                img.onload();
+                });
             }
         });
-    }  
+    
+        if (loadedImagesCount === images.length) {
+            // All images are already loaded, adjust the size immediately
+            const maxHeight = window.innerHeight * 0.7;
+            flipbook.style.height = flipbook.scrollHeight > maxHeight ? `${maxHeight}px` : 'auto';
+        }
+    }
+    
 });
   
