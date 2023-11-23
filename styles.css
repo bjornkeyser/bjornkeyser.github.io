@@ -14,6 +14,11 @@ html, body {
 
 .title{
   text-shadow: 2px 2px 4px #2f2f2f;
+  text-decoration: none;
+}
+
+.title:visited {
+  text-decoration: none;
 }
 
 .tags{
@@ -294,4 +299,24 @@ li:hover {
   max-width: 100%;
   height: auto; /* Maintain aspect ratio of images */
   object-fit: cover; /* Cover the page */
+}
+
+.instagram-link {
+  position: absolute; /* Position the link absolutely within bioColumn */
+  bottom: 10px; /* Distance from the bottom of bioColumn */
+  left: 10px; /* Distance from the left of bioColumn */
+  text-decoration: none;
+  color: black; /* Or any color you prefer */
+  font-size: 20px; /* Adjust as needed */
+}
+
+.instagram-link img {
+  margin-right: 10px; /* Space between the logo and text */
+  width: 30px; /* Adjust as needed */
+  height: auto;
+}
+
+/* Style for Font Awesome icon */
+.instagram-link .fab {
+  margin-right: 10px; /* Space between the icon and text */
 }
