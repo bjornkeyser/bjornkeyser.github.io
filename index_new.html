@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Björn Keyser</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <script src="script.js" defer></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="turnjs4/lib/turn.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        /* Your existing styles for columns */
+        .wrapper {
+            display: flex;
+            height: 100vh;
+        }
+
+        .column {
+            flex-grow: 1;
+            overflow-y: auto;
+            box-sizing: border-box;
+            transition: flex-grow 0.3s ease;
+            position: relative;
+        }
+
+        #left,
+        #right {
+            flex: 1;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        #right {
+            background-color: #f0f0f0;
+        }
+
+        #d3-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        #content-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        /* image {
+            mix-blend-mode: exclusion;
+        } */
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div id="overlay" style="display: none;">
+            <img id="overlay-image" src="" alt="Expanded Image">
+        </div>
+        <div id="left" class="column">
+        </div>
+        <div id="right" class="column">
+            <!-- D3 simulation container -->
+            <div id="content-container"></div>
+            <div id="d3-container"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("testikel")
+            // Portfolio data with added attributes
+            const portfolioData = [
+                {
+                    title: "breath affects", id: 4, image_url: "Content/breath.gif", like_factor: 8, content_file: "breathaffects.html", date: "2022-03-24",
+                    attributes: ["design", "code", "collective intelligence", "emergence", "Processing"],
+                },
+                {
+                    title: "flocka", id: 8, image_url: "Content/flockfuck1.png", like_factor: 8, content_file: "flocka.html", date: "2021-07-01",
+                    attributes: ["design", "code", "emergence", "Processing"],
+                },
+                {
+                    title: "TUNER", id: 15, image_url: "Content/tuner_letgo.png", like_factor: 8, content_file: "tuner.html", date: "2022-08-08",
+                    attributes: ["music", "visualizer", "Blender", "interactive", "design"]
+                },
+                {
+                    title: "cca", id: 9, image_url: "Content/cca.png", like_factor: 8, content_file: "cca.html", date: "2022-08-10",
+                    attributes: ["compute shaders", "GLSL", "Unity", "emergence", "code", "design", "cellular automata", "music", "visualizer"]
+                },
+                {
+                    title: "spatial whispers", id: 5, image_url: "Content/sonicwhispers.png", like_factor: 5, content_file: "spatialwhispers.html", date: "2022-04-26",
+                    attributes: ["Pure Data", "interactive", "sound design", "TouchDesigner"]
+                },
+                {
+                    title: "textual tension", id: 6, image_url: "Content/textualtension3.png", like_factor: 8, content_file: "textualtension.html", date: "2022-06-09",
+                    attributes: ["Processing", "Pure Data", "interactive", "dataviz", "Python", "installation"]
+                },
+                {
+                    title: "metaWHAT!?", id: 7, image_url: "Content/metawhat1.jpeg", like_factor: 8, content_file: "metawhat.html", date: "2022-07-01",
+                    attributes: ["Blender", "Python", "geometry nodes", "metaverse", "installation", "dataviz"]
+                },
+                {
+                    title: "screaming plants", id: 11, image_url: "Content/screamingplants.png", like_factor: 7, content_file: "screamingplants.html", date: "2023-02-01",
+                    attributes: ["experiment", "installation", "consciousness", "Arduino"]
+                },
+                {
+                    title: "delay", id: 12, image_url: "Content/delay_screenshot.png", like_factor: 9, content_file: "delay.html", date: "2023-07-06",
+                    attributes: ["experiment", "paper", "consciousness", "neuroscience", "video"]
+                },
+                {
+                    title: "human magnetoreception", id: 13, image_url: "Content/magnetoreception.png", like_factor: 9, content_file: "magnetoreception.html", date: "2024-06-04",
+                    attributes: ["experiment", "paper", "consciousness", "neuroscience", "video", "Arduino", "natural intelligence"]
+                },
+                {
+                    title: "physarum", id: 14, image_url: "Content/physarum.png", like_factor: 9, content_file: "physarum.html", date: "2022-09-26",
+                    attributes: ["code", "design", "emergence", "collective intelligence", "Unity", "compute shaders", "GLSL"]
+                },
+                {
+                    title: "blackout poetry", id: 1, image_url: "Content/arraysure1.png", like_factor: 7.5, content_file: "blackout.html", date: "2022-10-15",
+                    attributes: ["Processing", "design", "book", "creativity", "artificial intelligence", "poetry"]
+                },
+                {
+                    title: "haikuki", id: 2, image_url: "Content/haikuki_thumbnail2.png", like_factor: 9, content_file: "haikuki.html", date: "2022-11-02",
+                    attributes: ["Python", "evolutionary algorithms", "book", "code", "design", "chemistry", "creativity", "dataviz"]
+                },
+                {
+                    title: "reversing roles", id: 3, image_url: "Content/rr1.jpeg", like_factor: 7.75, content_file: "reversingroles.html", date: "2022-12-30",
+                    attributes: ["book", "code", "design", "GPT", "artificial intelligence", "natural intelligence", "creativity"]
+                },
+                {
+                    title: "split learning for finance", id: 10, image_url: "Content/splitlearning.png", like_factor: 3, content_file: "splitlearning.html", date: "2021-07-01",
+                    attributes: ["artificial intelligence", "neural network", "finance", "fraud", "paper"]
+                },
+                {
+                    title: "vertical split learning", id: 16, image_url: "Content/verticalsplitlearning.png", like_factor: 3, content_file: "verticalsplitlearning.html", date: "2022-09-30",
+                    attributes: ["artificial intelligence", "neural network", "finance", "fraud", "paper"]
+                }
+            ];
+
+            const attributes = ["design", "code", "collective intelligence", "emergence", "Processing", "music", "visualizer", "Blender", "interactive", "compute shaders", "GLSL", "Unity", "cellular automata",
+                "Pure Data", "sound design", "TouchDesigner", "installation", "Python", "dataviz", "geometry nodes", "metaverse", "experiment", "consciousness", "Arduino", "paper", "neuroscience", "video",
+                "natural intelligence", "book", "creativity", "artificial intelligence", "poetry", "chemistry", "evolutionary algorithms", "GPT", "neural network", "finance", "fraud"];
+
+            // Add a central node for the name "Björn"
+            const centralNode = { id: 0, title: "Björn" };
+
+            // Create nodes for portfolio items, attributes, and the central node
+            const nodes = [...portfolioData, ...attributes.map(attr => ({ id: attr })), centralNode];
+
+            // Create links based on shared attributes and connections to the central node
+            const links = [];
+            portfolioData.forEach(item => {
+                // Connect portfolio items to the central node
+                links.push({ source: centralNode.id, target: item.id });
+
+                // Connect attributes to portfolio items
+                item.attributes.forEach(attr => {
+                    links.push({ source: item.id, target: attr });
+                });
+            });
+
+            // Specify the dimensions of the chart.
+            const width = document.getElementById('left').offsetWidth;
+            const height = document.getElementById('left').offsetHeight;
+
+            // Specify the image size scale
+            const imgScale = 80;
+
+            // Specify the color scale.
+            const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+            // Create a simulation with several forces.
+            const simulation = d3.forceSimulation(nodes)
+                .force("link", d3.forceLink(links).id(d => d.id))
+                .force("charge", d3.forceManyBody().strength(-300))
+                .force("center", d3.forceCenter(width / 2, height / 2))
+                .force("collide", d3.forceCollide().radius(40).strength(0.3)) // Adjust radius and strength as needed
+                .force("x", d3.forceX().strength(0.1).x(d => Math.min(width, Math.max(0, d.x))))
+                .force("y", d3.forceY().strength(0.1).y(d => Math.min(height, Math.max(0, d.y))))
+                .on("tick", ticked);
+
+            // Create the SVG container.
+            const svg = d3.select("#d3-container")
+                .append("svg")
+                .attr("width", "100%")
+                .attr("height", "100%")
+            // .attr("viewBox", [0, 0, width, height])
+            // .attr("style", "max-width: 100%; height: auto;");
+
+            // Add a line for each link, and a circle for each node.
+            const link = svg.append("g")
+                .attr("stroke", "#000")
+                .attr("stroke-opacity", 0.5)
+                .selectAll()
+                .data(links)
+                .join("line")
+                .attr("stroke-width", 2);
+
+            const node = svg.append("g")
+                .attr("stroke", "#000")
+                .attr("stroke-width", 1.5)
+                .selectAll()
+                .data(nodes)
+                .join("g")
+                .on("click", handleNodeClick);
+
+            link.attr("stroke-opacity", d => (d.source.id === 0) ? 0.8 : 0.1)
+
+            const circle = node.filter(d => !d.attributes)
+                .append("circle")
+                .attr("r", 10)
+                .attr("fill", d => 'white')
+
+
+            const image = node.filter(d => d.attributes)
+                .append("svg:image")
+                .attr('width', d => imgScale)
+                .attr('height', d => imgScale)
+                .attr("xlink:href", d => d.image_url)
+                // .attr("border-radius", '50%')
+                .attr("x", d => d.x - imgScale / 2)  // Center horizontally
+                .attr("y", d => d.y - imgScale / 2); // Center vertically
+
+
+            // Add text labels for all nodes    
+            const title = node.append("text")
+                .text(d => (d.id == 0) ? "björn" : (d.attributes ? d.title : d.id))
+                .attr("dx", 25)
+                .attr("dy", 5)
+                .attr("font-family", "system-ui")
+                .attr("font-weight", "100")
+                .attr("font-size", (d => (d.id == 0) ? "25px" : "15px"))
+                .attr("display", "none");
+            node.on("mouseover", (event, node) => {
+                const connectedNodes = getConnectedNodes(node);
+
+                // Show titles for connected nodes
+                title.attr("display", d => connectedNodes.includes(d) ? "block" : "none");
+
+
+                link.style('stroke-opacity', function (l) {
+                    if ((connectedNodes.includes(l.target) && l.source == node) || (connectedNodes.includes(l.source) && l.target == node)) {
+                        return '1';
+                    }
+                });
+
+                link.style("stroke-width", function (l) {
+                    if ((connectedNodes.includes(l.target) && l.source == node) || (connectedNodes.includes(l.source) && l.target == node)) {
+                        return 1.5;
+                    } else {
+                        return 0.5;
+                    }
+                });
+            });
+
+            node.on("mouseout", function (d) {
+                link.attr("stroke-opacity", d => (d.source.id === 0) ? 0.8 : 0.1)
+
+                // Hide titles on mouseout
+                title.attr("display", "none");
+
+                node.attr("opacity", 1);
+
+                hideAttributeNames();
+            });
+
+            // Tooltip
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0)
+                .style("position", "absolute");
+
+            function handleNodeClick(event, d) {
+                adjustColumnSpace(document.getElementById('right'));
+
+                const contentContainer = d3.select("#content-container");
+
+                // Check if content_file is defined before fetching
+                if (d.content_file) {
+                    // Fetch content from the specified content_file
+                    fetch("subpages/" + d.content_file)
+                        .then(response => response.text())
+                        .then(content => {
+                            // Update the content in the right column
+                            contentContainer.html(content);
+                        })
+                        .catch(error => {
+                            console.error("Error fetching content:", error);
+                            contentContainer.html("<p>Error loading content.</p>");
+                        });
+                } else {
+                    // Handle the case where content_file is not defined (central node, for example)
+                    contentContainer.html("<p>No content available for this node.</p>");
+                }
+            }
+
+
+
+            function handleMouseOver(event, d) {
+                // tooltip.transition()
+                //   .duration(100)
+                //   .style("opacity", .9);
+                // tooltip.html(d.attributes ? d.title : d.id)
+                //   .style("left", (event.pageX + 10) + "px")
+                //   .style("top", (event.pageY - 28) + "px");
+            }
+
+            function handleMouseOut() {
+                // tooltip.transition()
+                //   .duration(500)
+                //   .style("opacity", 0);
+            }
+
+            function handleImageMouseOver(event, d) {
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr('width', d => imgScale)
+                    .attr('height', d => imgScale);
+                handleMouseOver;
+            }
+
+            function handleImageMouseOut() {
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr('width', d => imgScale)
+                    .attr('height', d => imgScale)
+                handleMouseOut;
+            }
+
+            // Function to get connected nodes
+            function getConnectedNodes(node) {
+                const connectedNodes = [node];
+
+                // Check links
+                links.forEach(function (link) {
+                    if (link.source === node) {
+                        connectedNodes.push(link.target);
+                    } else if (link.target === node) {
+                        connectedNodes.push(link.source);
+                    }
+                });
+
+                // // Check forceLink force
+                // const linkIndexes = simulation.force("link").links().map(link => link.index);
+                // linkIndexes.forEach(function (index) {
+                //   if (links[index].source === node) {
+                //     connectedNodes.push(links[index].target);
+                //   } else if (links[index].target === node) {
+                //     connectedNodes.push(links[index].source);
+                //   }
+                // });
+
+                // Remove duplicates by converting to Set and back to Array
+                const uniqueConnectedNodes = Array.from(new Set(connectedNodes));
+
+                console.log("Node:", node);
+                console.log("Node ID:", node.id);
+                console.log("Links:", links);
+                console.log("ForceLinks:", simulation.force("link").links());
+                console.log("Connected Nodes:", uniqueConnectedNodes);
+
+                return uniqueConnectedNodes;
+            }
+
+            function getAttributeNames(node) {
+                const attributeNames = [];
+                links.forEach(function (link) {
+                    if (link.source === node && link.target.attributes) {
+                        attributeNames.push(link.target.id);
+                    }
+                    if (link.target === node && link.source.attributes) {
+                        attributeNames.push(link.source.id);
+                    }
+                });
+                return attributeNames;
+            }
+
+            function showAttributeNames(attributeNames) {
+                attributeNames.forEach(function (name) {
+                    $(name).fadeIn('slow');
+                });
+            }
+
+            function hideAttributeNames() {
+                // Implement the logic to hide attribute names (if any) here
+            }
+
+
+
+            node.append("title")
+                .text(d => (d.attributes ? d.title : d.id));
+
+            // Add a drag behavior.
+            node.call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+            // Set the position attributes of links and nodes each time the simulation ticks.
+            function ticked() {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+                image
+                    .attr("x", d => d.x - 30)
+                    .attr("y", d => d.y - 22);
+
+                title
+                    .attr("x", d => d.x)
+                    .attr("y", d => d.y);
+
+                circle
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+
+            }
+            // Reheat the simulation when drag starts, and fix the subject position.
+            function dragstarted(event) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                event.subject.fx = event.subject.x;
+                event.subject.fy = event.subject.y;
+            }
+
+            // Update the subject (dragged node) position during drag.
+            function dragged(event) {
+                event.subject.fx = event.x;
+                event.subject.fy = event.y;
+            }
+
+            // Restore the target alpha so the simulation cools after dragging ends.
+            // Unfix the subject position now that it’s no longer being dragged.
+            function dragended(event) {
+                if (!event.active) simulation.alphaTarget(0);
+                event.subject.fx = null;
+                event.subject.fy = null;
+            }
+
+            // document.body.appendChild(svg.node());
+            document.getElementById('left').appendChild(svg.node());
+
+            // Get references to the columns
+            const leftCol = document.getElementById('left');
+            const rightCol = document.getElementById('right');
+
+            // Add click event listeners to each column
+            leftCol.addEventListener('click', function (event) {
+                // Check if the clicked element is a node inside the D3 container
+                console.log(event.target.tagName);
+                const isNode = event.target.tagName === 'image' || event.target.tagName == 'circle';
+
+                if (isNode) {
+                    // If a node is clicked, call adjustColumnSpace(right)
+                    adjustColumnSpace(rightCol);
+                } else {
+                    // If any other area in the left column is clicked, call adjustColumnSpace(left)
+                    adjustColumnSpace(leftCol);
+                }
+            });
+
+            rightCol.addEventListener('click', () => adjustColumnSpace(rightCol));
+
+            // Function to adjust column space
+            function adjustColumnSpace(clickedColumn) {
+                // Reset flex values for all columns
+                leftCol.style.flex = '2';
+                rightCol.style.flex = '2';
+
+                // Increase the flex value for the clicked column
+                clickedColumn.style.flex = '3';
+            }
+
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize the flipbook
+            if ($('.flipbook').length > 0) {
+                $('.flipbook').turn({
+                    // Options for turn.js
+                    autoCenter: true
+                });
+            }
+        });
+
+
+
+    </script>
+
+</body>
+
+</html>

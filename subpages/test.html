@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple HTML with D3 Force-Directed Graph</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        /* Your existing styles for columns */
+        .wrapper {
+            display: flex;
+            height: 100vh;
+        }
+
+        .column {
+            flex-grow: 1;
+            overflow-y: auto;
+            box-sizing: border-box;
+            transition: flex-grow 0.3s ease;
+            /* Add transition for a smooth effect */
+        }
+
+        #left,
+        #right {
+            flex: 1;
+            /* Initial equal division of space */
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        #right {
+            background-color: #f0f0f0;
+        }
+
+        /* Style for the D3 chart */
+        #d3-container {
+            width: 100%; /* Make the chart container take 100% width */
+            height: 300px; /* Set a fixed height for the chart */
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div id="left" class="column">
+            <h2>Force-Directed Graph in Left Column</h2>
+            <!-- D3 chart container -->
+            <div id="d3-container"></div>
+        </div>
+        <div id="right" class="column">
+            <h2>Right Column</h2>
+            <p>This is the details column. Add your content here.</p>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for the force-directed graph
+        const nodes = [
+            { id: 1, name: "Node 1" },
+            { id: 2, name: "Node 2" },
+            { id: 3, name: "Node 3" },
+            { id: 4, name: "Node 4" },
+            { id: 5, name: "Node 5" }
+        ];
+
+        const links = [
+            { source: 1, target: 2 },
+            { source: 1, target: 3 },
+            { source: 2, target: 4 },
+            { source: 3, target: 5 }
+        ];
+
+        // Create a simulation with several forces.
+        const simulation = d3.forceSimulation(nodes)
+            .force("link", d3.forceLink(links).id(d => d.id).distance(100))
+            .force("charge", d3.forceManyBody().strength(-200))
+            .force("center", d3.forceCenter(300, 150))
+            .on("tick", ticked);
+
+        // Create the SVG container.
+        const svg = d3.select("#d3-container")
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%");
+
+        // Add a line for each link, and a circle for each node.
+        const link = svg.append("g")
+            .attr("stroke", "#000")
+            .attr("stroke-opacity", 0.5)
+            .selectAll()
+            .data(links)
+            .enter().append("line")
+            .attr("stroke-width", 2);
+
+        const node = svg.append("g")
+            .attr("stroke", "#000")
+            .attr("stroke-width", 1.5)
+            .selectAll()
+            .data(nodes)
+            .enter().append("circle")
+            .attr("r", 10)
+            .attr("fill", "blue");
+
+        // Set the position attributes of links and nodes each time the simulation ticks.
+        function ticked() {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+
+            node
+                .attr("cx", d => d.x)
+                .attr("cy", d => d.y);
+        }
+    </script>
+</body>
+
+</html>

@@ -47,7 +47,7 @@ html, body {
   color: black;
 }
 
-.wrapper {
+/* .wrapper {
     display: flex;
     flex-wrap: nowrap;
     height: 100vh; /* viewport height */
@@ -64,7 +64,7 @@ html, body {
     padding-left: 10px;
     padding-right: 0px;
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
-  }
+  } */
 
 #bioColumn, #projectsColumn {
   flex: 0 0 25%;
