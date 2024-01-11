@@ -215,7 +215,7 @@
             // Create a simulation with several forces.
             const simulation = d3.forceSimulation(nodes)
                 .force("link", d3.forceLink(links).id(d => d.id))
-                .force("charge", d3.forceManyBody().strength(-300))
+                .force("charge", d3.forceManyBody().strength(-400))
                 .force("center", d3.forceCenter(width / 2, height / 2))
                 .force("collide", d3.forceCollide().radius(40).strength(0.4)) // Adjust radius and strength as needed
                 .force("x", d3.forceX().strength(0.2).x(d => Math.min(width, Math.max(0, d.x))))
@@ -262,6 +262,7 @@
                 .attr("font-size", "100px")
                 .style("fill", "white")
                 .style("stroke", "white")
+                .style('position', 'absolute')
                 .attr("x", "0")
                 .attr("y", "0");
 
@@ -385,6 +386,7 @@
                             // Update the content in the right column
                             adjustColumnSpace(document.getElementById('right'));
                             contentContainer.html(content);
+                            doFlip();
                         })
                         .catch(error => {
                             console.error("Error fetching content:", error);
@@ -426,7 +428,6 @@
                                         contentContainer.html("<p>Error loading content.</p>");
                                     });
                             });
-
 
                             // Add a line break if it's not the last item
                             if (index < connectedItems.length - 1) {
@@ -549,8 +550,8 @@
                     .attr("cy", height - 30);
 
                 // Update the positions of the timestamp text elements
-                timestamp.attr("x", width/2)
-                    .attr("y", height/2);
+                timestamp.attr("x", width / 2)
+                    .attr("y", height / 2);
 
                 circle
                     .attr("cx", d => d.x)
@@ -573,7 +574,7 @@
 
             // Reheat the simulation when drag starts, and fix the subject position.
             function dragstarted(event) {
-                if (!event.active) simulation.alphaTarget(0.3).restart();
+                if (!event.active) simulation.alphaTarget(0.1).restart();
                 event.subject.fx = event.subject.x;
                 event.subject.fy = event.subject.y;
             }
@@ -626,15 +627,15 @@
     </script>
 
     <script>
-        $(document).ready(function () {
-            // Initialize the flipbook
+        function doFlip() {
             if ($('.flipbook').length > 0) {
                 $('.flipbook').turn({
                     // Options for turn.js
                     autoCenter: true
                 });
+                $('.flipbook').turn('peel', 'tr');
             }
-        });
+        }
     </script>
 
 </body>
