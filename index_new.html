@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Björn Keyser</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles_new.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
-    <script src="script.js" defer></script>
+    <!-- <script src="script.js" defer></script> -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="turnjs4/lib/turn.js"></script>
     <script src="https://d3js.org/d3.v6.min.js"></script>
@@ -29,13 +29,31 @@
         #left,
         #right {
             flex: 1;
-            border: 1px solid #ccc;
+            /* border: 10px solid pink; */
             padding: 10px;
         }
 
         #right {
             background-color: #f0f0f0;
         }
+
+        #timeline {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            /* Adjust the height as needed */
+            background-color: #000;
+            /* Adjust the color as needed */
+            z-index: 2;
+        }
+
+        .dot {
+            /* fill: #000; */
+            /* r: 4; */
+        }
+
 
         #d3-container {
             position: absolute;
@@ -51,6 +69,19 @@
             z-index: 2;
         }
 
+        svg {
+            /* background-image: linear-gradient(45deg, #dedede 25%, transparent 25%, transparent 75%, #dedede 75%, #dedede),
+                linear-gradient(45deg, #dedede 25%, transparent 25%, transparent 75%, #dedede 75%, #dedede);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            background-color: #f0f0f0; */
+            /* Set a default background color */
+        }
+
+        .node {
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.4));
+        }
+
         /* image {
             mix-blend-mode: exclusion;
         } */
@@ -64,6 +95,7 @@
             <img id="overlay-image" src="" alt="Expanded Image">
         </div>
         <div id="left" class="column">
+            <div id="timeline"></div>
         </div>
         <div id="right" class="column">
             <!-- D3 simulation container -->
@@ -77,9 +109,10 @@
             console.log("testikel")
             // Portfolio data with added attributes
             const portfolioData = [
+                // TODO: ADD DOODLE
                 {
                     title: "breath affects", id: 4, image_url: "Content/breath.gif", like_factor: 8, content_file: "breathaffects.html", date: "2022-03-24",
-                    attributes: ["design", "code", "collective intelligence", "emergence", "Processing"],
+                    attributes: ["design", "code", "collective intelligence", "emergence", "Processing", "video"],
                 },
                 {
                     title: "flocka", id: 8, image_url: "Content/flockfuck1.png", like_factor: 8, content_file: "flocka.html", date: "2021-07-01",
@@ -87,11 +120,15 @@
                 },
                 {
                     title: "TUNER", id: 15, image_url: "Content/tuner_letgo.png", like_factor: 8, content_file: "tuner.html", date: "2022-08-08",
-                    attributes: ["music", "visualizer", "Blender", "interactive", "design"]
+                    attributes: ["music", "visualizer", "Blender", "design", "video"]
+                },
+                {
+                    title: "doodle", id: 17, image_url: "Content/doodle.png", like_factor: 7, content_file: "doodle.html", date: "2022-06-24",
+                    attributes: ["music", "visualizer", "TouchDesigner", "design", "video"]
                 },
                 {
                     title: "cca", id: 9, image_url: "Content/cca.png", like_factor: 8, content_file: "cca.html", date: "2022-08-10",
-                    attributes: ["compute shaders", "GLSL", "Unity", "emergence", "code", "design", "cellular automata", "music", "visualizer"]
+                    attributes: ["compute shaders", "GLSL", "Unity", "emergence", "code", "design", "cellular automata", "music", "visualizer", "video"]
                 },
                 {
                     title: "spatial whispers", id: 5, image_url: "Content/sonicwhispers.png", like_factor: 5, content_file: "spatialwhispers.html", date: "2022-04-26",
@@ -99,7 +136,7 @@
                 },
                 {
                     title: "textual tension", id: 6, image_url: "Content/textualtension3.png", like_factor: 8, content_file: "textualtension.html", date: "2022-06-09",
-                    attributes: ["Processing", "Pure Data", "interactive", "dataviz", "Python", "installation"]
+                    attributes: ["Processing", "Pure Data", "interactive", "dataviz", "Python", "installation", "video", "visualizer"]
                 },
                 {
                     title: "metaWHAT!?", id: 7, image_url: "Content/metawhat1.jpeg", like_factor: 8, content_file: "metawhat.html", date: "2022-07-01",
@@ -107,7 +144,7 @@
                 },
                 {
                     title: "screaming plants", id: 11, image_url: "Content/screamingplants.png", like_factor: 7, content_file: "screamingplants.html", date: "2023-02-01",
-                    attributes: ["experiment", "installation", "consciousness", "Arduino"]
+                    attributes: ["experiment", "installation", "consciousness", "Arduino", "video"]
                 },
                 {
                     title: "delay", id: 12, image_url: "Content/delay_screenshot.png", like_factor: 9, content_file: "delay.html", date: "2023-07-06",
@@ -119,7 +156,7 @@
                 },
                 {
                     title: "physarum", id: 14, image_url: "Content/physarum.png", like_factor: 9, content_file: "physarum.html", date: "2022-09-26",
-                    attributes: ["code", "design", "emergence", "collective intelligence", "Unity", "compute shaders", "GLSL"]
+                    attributes: ["code", "design", "emergence", "collective intelligence", "Unity", "compute shaders", "GLSL", "video"]
                 },
                 {
                     title: "blackout poetry", id: 1, image_url: "Content/arraysure1.png", like_factor: 7.5, content_file: "blackout.html", date: "2022-10-15",
@@ -166,11 +203,11 @@
             });
 
             // Specify the dimensions of the chart.
-            const width = document.getElementById('left').offsetWidth;
-            const height = document.getElementById('left').offsetHeight;
+            var width = document.getElementById('left').offsetWidth;
+            var height = document.getElementById('left').offsetHeight;
 
             // Specify the image size scale
-            const imgScale = 80;
+            const imgScale = 60;
 
             // Specify the color scale.
             const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -193,29 +230,66 @@
             // .attr("viewBox", [0, 0, width, height])
             // .attr("style", "max-width: 100%; height: auto;");
 
+            svg.call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+
+            const parseDate = d3.timeParse("%Y-%m-%d");
+
+            const minDate = d3.min(nodes.filter(node => node.attributes), d => parseDate(d.date));
+            const maxDate = d3.max(nodes.filter(node => node.attributes), d => parseDate(d.date));
+
+            const xScale = d3.scaleTime()
+                .domain([minDate, maxDate])
+                .range([10, width * (2 / 3)]);
+
+            const dots = svg.selectAll(".dot")
+                .data(nodes.filter(node => node.attributes))
+                .enter()
+                .append("circle")
+                .attr("class", "dot")
+                .attr("cx", d => xScale(parseDate(d.date)))
+                .attr("cy", height - 30)
+                .attr("fill", "black")
+                .attr("r", 4);
+
+            const timestamp = dots.append("text")
+                .text("kankerrrr") // Assuming d.date is the timestamp
+                .attr("cx", d => xScale(new Date(d.date))) // Adjust the position based on the xScale
+                .attr("cy", height - 5) // Adjust the position as needed
+                .attr("font-family", "system-ui")
+                .attr("font-weight", "100")
+                .attr("font-size", "10px") // Adjust the font size as needed
+                .style("fill", "black"); // Adjust the text color as needed
+
             // Add a line for each link, and a circle for each node.
             const link = svg.append("g")
                 .attr("stroke", "#000")
-                .attr("stroke-opacity", 0.5)
+                .attr("stroke-opacity", 0.2)
+                .attr("stroke-width", 1.5)
                 .selectAll()
                 .data(links)
-                .join("line")
-                .attr("stroke-width", 2);
+                .join("line");
+
+            link.attr("stroke-opacity", d => (d.source.id === 0) ? 0.8 : 0.2)
 
             const node = svg.append("g")
-                .attr("stroke", "#000")
+                // .attr("stroke", "#000")
                 .attr("stroke-width", 1.5)
+                .attr("class", "node")
                 .selectAll()
                 .data(nodes)
                 .join("g")
-                .on("click", handleNodeClick);
-
-            link.attr("stroke-opacity", d => (d.source.id === 0) ? 0.8 : 0.1)
+                .on("click", handleNodeClick)
+                .style("mix-blend-mode", "difference"); // Adjust the blend mode as needed
 
             const circle = node.filter(d => !d.attributes)
                 .append("circle")
                 .attr("r", 10)
-                .attr("fill", d => 'white')
+                .attr("fill", 'white')
+                .attr("fill-opacity", d => d.id === 0 ? 1 : 0.6);
 
 
             const image = node.filter(d => d.attributes)
@@ -227,48 +301,60 @@
                 .attr("x", d => d.x - imgScale / 2)  // Center horizontally
                 .attr("y", d => d.y - imgScale / 2); // Center vertically
 
+            // Add rectangles behind node text
+            const rect = node.append("rect")
+                .attr("dx", d => 10)
+                .attr("dy", 5)
+                .attr("width", d => d.id === 0 ? 60 : (d.attributes ? d.title.length * 7 : d.id.length * 8))
+                .attr("height", 20) // Set the height of the rectangle
+                .attr("display", d => d.id === 0 ? "block" : "none")
+                .attr("fill", d => d.attributes ? "black" : "white") // Set the fill color
 
             // Add text labels for all nodes    
             const title = node.append("text")
                 .text(d => (d.id == 0) ? "björn" : (d.attributes ? d.title : d.id))
-                .attr("dx", 25)
+                .attr("dx", 10)
                 .attr("dy", 5)
                 .attr("font-family", "system-ui")
+                .attr("display", d => d.id === 0 ? "block" : "none")
                 .attr("font-weight", "100")
                 .attr("font-size", (d => (d.id == 0) ? "25px" : "15px"))
-                .attr("display", "none");
+                .attr("stroke", d => d.attributes ? "white" : "black") // Set the fill color
+
+            title.filter(d => d.id === 0 || !d.attributes).attr("class", "title");
+
             node.on("mouseover", (event, node) => {
                 const connectedNodes = getConnectedNodes(node);
 
                 // Show titles for connected nodes
-                title.attr("display", d => connectedNodes.includes(d) ? "block" : "none");
+                title.attr("display", d => connectedNodes.includes(d) || d.id === 0 ? "block" : "none");
 
+                rect.attr("display", d => connectedNodes.includes(d) || d.id === 0 ? "block" : "none");
+
+                circle.attr("fill-opacity", d => connectedNodes.includes(d) || d.id === 0 ? 1 : 0.6)
 
                 link.style('stroke-opacity', function (l) {
                     if ((connectedNodes.includes(l.target) && l.source == node) || (connectedNodes.includes(l.source) && l.target == node)) {
-                        return '1';
+                        return '0.8';
                     }
                 });
 
-                link.style("stroke-width", function (l) {
-                    if ((connectedNodes.includes(l.target) && l.source == node) || (connectedNodes.includes(l.source) && l.target == node)) {
-                        return 1.5;
-                    } else {
-                        return 0.5;
-                    }
-                });
+                // link.style("stroke-width", function (l) {
+                //     if ((connectedNodes.includes(l.target) && l.source == node) || (connectedNodes.includes(l.source) && l.target == node)) {
+                //         // return 2.5;
+                //     } else {
+                //         return 1.5;
+                //     }
+                // });
             });
 
             node.on("mouseout", function (d) {
-                link.attr("stroke-opacity", d => (d.source.id === 0) ? 0.8 : 0.1)
-
-                // Hide titles on mouseout
-                title.attr("display", "none");
-
-                node.attr("opacity", 1);
-
-                hideAttributeNames();
+                title.attr("display", d => d.id === 0 ? "block" : "none");
+                rect.attr("display", d => d.id === 0 ? "block" : "none");
+                circle.filter(d => d.id !== 0).attr("fill-opacity", 0.6);
+                link.attr("stroke-opacity", d => (d.source.id === 0) ? 0.8 : 0.2);
             });
+
 
             // Tooltip
             const tooltip = d3.select("body").append("div")
@@ -277,17 +363,20 @@
                 .style("position", "absolute");
 
             function handleNodeClick(event, d) {
-                adjustColumnSpace(document.getElementById('right'));
-
                 const contentContainer = d3.select("#content-container");
 
                 // Check if content_file is defined before fetching
                 if (d.content_file) {
+                    // Highlight the corresponding dot in red
+                    dots.attr('fill', (dot => dot.date === d.date ? "red" : "black"));
+                    dots.attr('r', (dot => dot.date === d.date ? "8" : "4"));
+
                     // Fetch content from the specified content_file
                     fetch("subpages/" + d.content_file)
                         .then(response => response.text())
                         .then(content => {
                             // Update the content in the right column
+                            adjustColumnSpace(document.getElementById('right'));
                             contentContainer.html(content);
                         })
                         .catch(error => {
@@ -296,9 +385,52 @@
                         });
                 } else {
                     // Handle the case where content_file is not defined (central node, for example)
-                    contentContainer.html("<p>No content available for this node.</p>");
+                    adjustColumnSpace(document.getElementById('right'));
+
+                    // Display links in the content-container
+                    const connectedLinks = links.filter(link => link.source === d || link.target === d);
+                    const connectedItems = Array.from(new Set(connectedLinks.flatMap(link => [link.source, link.target])));
+
+                    // Clear the content-container
+                    contentContainer.html('');
+
+                    // Add a div with class "title" and the clicked node's name
+                    const titleDiv = contentContainer.append('div').attr('class', 'title');
+                    titleDiv.text(d.id == 0 ? d.title : d.id);
+
+                    // Iterate over connected items and create clickable links with line breaks
+                    connectedItems.forEach((item, index) => {
+                        if (item.content_file) {
+                            const link = contentContainer
+                                .append('a')
+                                .attr('href', '#') // Use '#' as a placeholder initially
+                                .text(item.title); // Use the title if available, else use 'Untitled'
+
+                            // Add click event listener to fetch and load content_file when the link is clicked
+                            link.on('click', () => {
+                                fetch("subpages/" + item.content_file)
+                                    .then(response => response.text())
+                                    .then(content => {
+                                        // Update the content in the content-container
+                                        contentContainer.html(content);
+                                    })
+                                    .catch(error => {
+                                        console.error("Error fetching content:", error);
+                                        contentContainer.html("<p>Error loading content.</p>");
+                                    });
+                            });
+
+
+                            // Add a line break if it's not the last item
+                            if (index < connectedItems.length - 1) {
+                                contentContainer.append('br');
+                            }
+                        }
+                    });
                 }
             }
+
+
 
 
 
@@ -323,7 +455,6 @@
                     .duration(200)
                     .attr('width', d => imgScale)
                     .attr('height', d => imgScale);
-                handleMouseOver;
             }
 
             function handleImageMouseOut() {
@@ -332,7 +463,6 @@
                     .duration(200)
                     .attr('width', d => imgScale)
                     .attr('height', d => imgScale)
-                handleMouseOut;
             }
 
             // Function to get connected nodes
@@ -347,16 +477,6 @@
                         connectedNodes.push(link.source);
                     }
                 });
-
-                // // Check forceLink force
-                // const linkIndexes = simulation.force("link").links().map(link => link.index);
-                // linkIndexes.forEach(function (index) {
-                //   if (links[index].source === node) {
-                //     connectedNodes.push(links[index].target);
-                //   } else if (links[index].target === node) {
-                //     connectedNodes.push(links[index].source);
-                //   }
-                // });
 
                 // Remove duplicates by converting to Set and back to Array
                 const uniqueConnectedNodes = Array.from(new Set(connectedNodes));
@@ -389,12 +509,6 @@
                 });
             }
 
-            function hideAttributeNames() {
-                // Implement the logic to hide attribute names (if any) here
-            }
-
-
-
             node.append("title")
                 .text(d => (d.attributes ? d.title : d.id));
 
@@ -419,9 +533,18 @@
                     .attr("x", d => d.x - 30)
                     .attr("y", d => d.y - 22);
 
+                rect
+                    .attr("x", d => d.x + 10)
+                    .attr("y", d => d.y - 10)
+
                 title
                     .attr("x", d => d.x)
                     .attr("y", d => d.y);
+
+                timestamp
+                    .attr("x", width / 2)
+                    .attr("y", height / 2);
+
 
                 circle
                     .attr("cx", d => d.x)
@@ -458,15 +581,10 @@
 
             // Add click event listeners to each column
             leftCol.addEventListener('click', function (event) {
-                // Check if the clicked element is a node inside the D3 container
-                console.log(event.target.tagName);
-                const isNode = event.target.tagName === 'image' || event.target.tagName == 'circle';
-
-                if (isNode) {
+                if (event.target.tagName === 'image') {
                     // If a node is clicked, call adjustColumnSpace(right)
                     adjustColumnSpace(rightCol);
                 } else {
-                    // If any other area in the left column is clicked, call adjustColumnSpace(left)
                     adjustColumnSpace(leftCol);
                 }
             });
@@ -482,8 +600,9 @@
                 // Increase the flex value for the clicked column
                 clickedColumn.style.flex = '3';
             }
-
         });
+
+
     </script>
 
     <script>

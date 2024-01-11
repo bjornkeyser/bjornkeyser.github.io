@@ -1,0 +1,326 @@
+@font-face {
+  font-family: 'TexGyreHeros', sans-serif; /* Use a custom name for your font */
+  src: url('texgyreheros/texgyreheros-regular.otf') format('opentype'); /* Specify the path to your .otf font file */
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'TexGyreHeros', sans-serif;
+    font-size: larger;
+    background-color: #eeeeee;
+}
+
+body {
+  position: relative;
+}
+
+.title{
+  text-shadow: 2px 2px 4px #2f2f2f;
+  text-decoration: none;
+}
+
+.title:visited {
+  text-decoration: none;
+}
+
+.tags{
+  font-size:small;
+  color: #F78DB9;
+}
+
+.tags::before {
+  content: '[';
+}
+
+.tags::after {
+  content: ']';
+}
+
+.subtitle{
+  font-size: medium;
+  color: #6a6a6a;
+}
+
+#aboutText span{
+  color: lime;
+}
+
+#aboutText .title {
+  color: black;
+}
+
+/* .wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 100vh; /* viewport height */
+/* } */
+  
+/* Base styles for columns */
+.column {
+    position: relative;
+    display: flex;
+    flex-grow: 1;
+    height: 100vh;
+    overflow-y: auto;
+    margin: 0 10px;
+    padding-left: 10px;
+    padding-right: 0px;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  } */
+
+#bioColumn, #projectsColumn {
+  flex: 0 0 25%;
+}
+
+#bioColumn {
+    border-right: 1px solid #ccc; /* Adjust the color and size as needed */
+}
+
+#right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Adjust the gap between items */
+  padding: 10px; /* Optional padding */
+}
+
+#right img, #right video {
+  flex: 1 1 calc(50% - 5px); /* Take up half the width minus half the gap */
+  max-width: calc(50% - 5px); /* Ensures items don't grow beyond half the width */
+  height: auto; /* Maintain aspect ratio */
+}
+
+/* Target the last image if it is the only child of its type */
+#right img:last-of-type:nth-of-type(odd),
+#right video:last-of-type:nth-of-type(odd) {
+  flex-basis: 100%; /* If it's the last and odd item, take full width */
+  max-width: 100%;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column;
+    height: 100%; /* Adjust this value to change the total height when stacked */
+  }
+
+  .column {
+    flex: none; /* Override the flex-grow from flex: 1 */
+    height: 33.333%; /* Each column takes up one-third of the height */
+    width: 100%;
+    margin: 0; /* Reset margin for stacked layout */
+    padding: 10px; /* Adjust padding as needed */
+    border-bottom: 1px solid #000;
+  }
+
+  .column:last-child {
+    border-bottom: none; /* Remove bottom border for the last column */
+  }
+
+}
+
+/* Styles that center the <li> elements vertically in their container */
+@media (min-width: 768px) { /* Adjust 768px to the breakpoint at which your phone mode ends */
+  .data-container { /* This should be the class of the container of your <li> elements */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh; /* This makes the container the full height of the viewport */
+  }
+}
+  
+.nav-item {
+    color: #007bff;
+    cursor: pointer;
+}
+
+.nav-item:hover {
+    color: #0056b3;
+}
+  
+#projectsList {
+  list-style-type: none;
+  padding: 0;
+}
+  
+#projectsList li {
+  position:relative;
+  z-index: 2;
+  cursor: pointer;
+  padding: 5px 0;
+}
+
+#projectsList li:hover {
+  text-decoration: underline;
+}
+
+#imagePreview {
+  display: none; /* Hide by default */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the image */
+  z-index: 1; /* Lower than the list items but not negative */
+  max-width: 100%; /* Ensure it doesn't overflow the column */
+  max-height: 100%; /* Ensure it doesn't overflow the column */
+  pointer-events: none; /* Prevents the image from capturing mouse events */
+}
+
+.data-item {
+  position: relative; /* This makes sure that the pseudo-element is positioned relative to the li */
+  padding-right: 20px; /* Adjust as needed to give space for the '>' */
+}
+
+/* Add the '>' after each .data-item */
+.data-item:after {
+  content: ''; /* This is the content of the pseudo-element, the '>' character */
+  position: absolute; /* Position the pseudo-element absolutely to its parent .data-item */
+  right: 20px; /* Align to the far right */
+  top: 50%; /* Align to the vertical middle */
+  transform: translateY(-50%); /* Center it perfectly by offsetting by half its height */
+}
+
+* {
+  transition: color 0.3s ease; /* Optional: for smooth color transition */
+}
+
+#aboutText span::before {
+  content: "↳";
+}
+
+span:hover,
+li:hover {
+    color: lime;
+    filter: blur(2px);
+}
+
+.timeline {
+  position: absolute;
+  right: 5px; /* Stick to the left edge of the third column */
+  top: 0; /* Adjust this as necessary */
+  bottom: 0; /* Adjust this as necessary */
+  width: 2px; /* Width of the timeline */
+  z-index: 10; /* Ensure it's above other elements */
+  border-right: 1px solid #ccc; /* This is the timeline */
+}
+
+.timeline-dot {
+  position: absolute;
+  right: -5px; /* Centers the dot on the timeline */
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: lime;
+  z-index: 11;
+  border: 2px solid transparent; /* Invisible border to prevent movement when active */
+  /* Initially we don't know where to position the dots, 
+     so we leave out the 'top' property. */
+}
+
+.timeline-entry {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse; /* This ensures the timestamp is on the left */
+}
+
+.timeline-dot.active + .timeline-timestamp {
+  display: block;
+  border-color: #F78DB9; /* Change just the color, not the border size */
+}
+
+.timeline-dot.active, .timeline-dot:hover{
+  background-color: #F78DB9 ;
+  /* right: -7 px;
+  width: 14px;
+  height: 14px; */
+}
+
+.timeline-timestamp {
+  position: absolute;
+  right: 100%; /* This positions the timestamp to the left of the dot */
+  white-space: nowrap;
+  display: none;
+  margin-right: 12px; /* Adjust spacing between the timestamp and the dot */
+  background-color: white;
+}
+
+.project-image-preview {
+  display: none; /* Hide by default */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the image */
+  z-index: 5; /* Ensure it's below the text */
+  max-width: 100%; /* Ensure it doesn't overflow the column */
+  max-height: 100%; /* Ensure it doesn't overflow the column */
+  pointer-events: none; /* Prevents the image from capturing mouse events */
+}
+
+#sketch-container {
+  width: 100%;
+  height: 400px; /* Adjust as needed */
+  /* Other styles if needed */
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent black background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* High z-index to ensure it's above everything else */
+}
+
+#overlay img {
+  max-width: 80%; /* Adjust as needed */
+  max-height: 80%; /* Adjust as needed */
+  margin: auto; /* Center the image */
+}
+
+.flipbook {
+  width: 100%; /* Full width of the parent container */
+  max-width: 100%; /* Prevent exceeding the parent container's width */
+  max-height: 70vh; /* Maximum height */
+  overflow-y: auto; /* Adds scroll if content overflows */
+  margin-bottom: 10px; /* Space between flipbooks */
+  /* Remove object-fit as it's not necessary here */
+}
+
+.flipbook .page {
+  background-color: white;
+  border: 1px solid #cccccc;
+  /* Let the content determine the height */
+}
+
+.flipbook .page img {
+  max-width: 100%;
+  height: auto; /* Maintain aspect ratio of images */
+  object-fit: cover; /* Cover the page */
+}
+
+.instagram-link {
+  position: absolute; /* Position the link absolutely within bioColumn */
+  bottom: 10px; /* Distance from the bottom of bioColumn */
+  left: 10px; /* Distance from the left of bioColumn */
+  text-decoration: none;
+  color: black; /* Or any color you prefer */
+  font-size: 20px; /* Adjust as needed */
+}
+
+.instagram-link img {
+  margin-right: 10px; /* Space between the logo and text */
+  width: 30px; /* Adjust as needed */
+  height: auto;
+}
+
+/* Style for Font Awesome icon */
+.instagram-link .fab {
+  margin-right: 10px; /* Space between the icon and text */
+}
