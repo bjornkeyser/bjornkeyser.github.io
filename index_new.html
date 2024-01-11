@@ -70,12 +70,12 @@
         }
 
         svg {
-            /* background-image: linear-gradient(45deg, #dedede 25%, transparent 25%, transparent 75%, #dedede 75%, #dedede),
+            background-image: linear-gradient(45deg, #dedede 25%, transparent 25%, transparent 75%, #dedede 75%, #dedede),
                 linear-gradient(45deg, #dedede 25%, transparent 25%, transparent 75%, #dedede 75%, #dedede);
             background-size: 20px 20px;
             background-position: 0 0, 10px 10px;
-            background-color: #f0f0f0; */
-            /* Set a default background color */
+            background-color: #f0f0f0;
+            /* /* Set a default background color */
         }
 
         .node {
@@ -106,7 +106,6 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            console.log("testikel")
             // Portfolio data with added attributes
             const portfolioData = [
                 // TODO: ADD DOODLE
@@ -205,9 +204,10 @@
             // Specify the dimensions of the chart.
             var width = document.getElementById('left').offsetWidth;
             var height = document.getElementById('left').offsetHeight;
+            const nodeRadius = 10;
 
             // Specify the image size scale
-            const imgScale = 60;
+            const imgScale = 100;
 
             // Specify the color scale.
             const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -217,9 +217,9 @@
                 .force("link", d3.forceLink(links).id(d => d.id))
                 .force("charge", d3.forceManyBody().strength(-300))
                 .force("center", d3.forceCenter(width / 2, height / 2))
-                .force("collide", d3.forceCollide().radius(40).strength(0.3)) // Adjust radius and strength as needed
-                .force("x", d3.forceX().strength(0.1).x(d => Math.min(width, Math.max(0, d.x))))
-                .force("y", d3.forceY().strength(0.1).y(d => Math.min(height, Math.max(0, d.y))))
+                .force("collide", d3.forceCollide().radius(40).strength(0.4)) // Adjust radius and strength as needed
+                .force("x", d3.forceX().strength(0.2).x(d => Math.min(width, Math.max(0, d.x))))
+                .force("y", d3.forceY().strength(0.2).y(d => Math.min(height, Math.max(0, d.y))))
                 .on("tick", ticked);
 
             // Create the SVG container.
@@ -230,10 +230,10 @@
             // .attr("viewBox", [0, 0, width, height])
             // .attr("style", "max-width: 100%; height: auto;");
 
-            svg.call(d3.drag()
-                .on("start", dragstarted)
-                .on("drag", dragged)
-                .on("end", dragended));
+            // svg.call(d3.drag()
+            //     .on("start", dragstarted)
+            //     .on("drag", dragged)
+            //     .on("end", dragended));
 
 
             const parseDate = d3.timeParse("%Y-%m-%d");
@@ -253,16 +253,17 @@
                 .attr("cx", d => xScale(parseDate(d.date)))
                 .attr("cy", height - 30)
                 .attr("fill", "black")
-                .attr("r", 4);
+                .attr("r", 5);
 
             const timestamp = dots.append("text")
-                .text("kankerrrr") // Assuming d.date is the timestamp
-                .attr("cx", d => xScale(new Date(d.date))) // Adjust the position based on the xScale
-                .attr("cy", height - 5) // Adjust the position as needed
-                .attr("font-family", "system-ui")
-                .attr("font-weight", "100")
-                .attr("font-size", "10px") // Adjust the font size as needed
-                .style("fill", "black"); // Adjust the text color as needed
+                .text(d => d.date) // Assuming d.date is the timestamp
+                // .attr("font-family", "system-ui")
+                // .attr("font-weight", "100")
+                .attr("font-size", "100px")
+                .style("fill", "white")
+                .style("stroke", "white")
+                .attr("x", "0")
+                .attr("y", "0");
 
             // Add a line for each link, and a circle for each node.
             const link = svg.append("g")
@@ -287,10 +288,9 @@
 
             const circle = node.filter(d => !d.attributes)
                 .append("circle")
-                .attr("r", 10)
+                .attr("r", nodeRadius)
                 .attr("fill", 'white')
                 .attr("fill-opacity", d => d.id === 0 ? 1 : 0.6);
-
 
             const image = node.filter(d => d.attributes)
                 .append("svg:image")
@@ -338,14 +338,6 @@
                         return '0.8';
                     }
                 });
-
-                // link.style("stroke-width", function (l) {
-                //     if ((connectedNodes.includes(l.target) && l.source == node) || (connectedNodes.includes(l.source) && l.target == node)) {
-                //         // return 2.5;
-                //     } else {
-                //         return 1.5;
-                //     }
-                // });
             });
 
             node.on("mouseout", function (d) {
@@ -355,6 +347,21 @@
                 link.attr("stroke-opacity", d => (d.source.id === 0) ? 0.8 : 0.2);
             });
 
+            function handleZoom(e) {
+                d3.selectAll('g')
+                    .attr('transform', e.transform);
+                d3.selectAll('line')
+                    .attr('transform', e.transform);
+
+            }
+
+            // Create zoom behavior
+            const zoomBehavior = d3.zoom()
+                .scaleExtent([1, 2])
+                .on('zoom', handleZoom);
+
+
+            d3.select('svg').call(zoomBehavior);
 
             // Tooltip
             const tooltip = d3.select("body").append("div")
@@ -429,10 +436,6 @@
                     });
                 }
             }
-
-
-
-
 
             function handleMouseOver(event, d) {
                 // tooltip.transition()
@@ -541,16 +544,33 @@
                     .attr("x", d => d.x)
                     .attr("y", d => d.y);
 
-                timestamp
-                    .attr("x", width / 2)
-                    .attr("y", height / 2);
+                // Update the positions of the dots
+                dots.attr("cx", d => xScale(new Date(d.date)))
+                    .attr("cy", height - 30);
 
+                // Update the positions of the timestamp text elements
+                timestamp.attr("x", width/2)
+                    .attr("y", height/2);
 
                 circle
                     .attr("cx", d => d.x)
                     .attr("cy", d => d.y);
 
+                constrainNodes(nodes, width, height, nodeRadius);
+
             }
+
+            function constrainNodes(nodes, width, height, radius) {
+                nodes.forEach(node => {
+                    // Constrain x-coordinate
+                    if (!node.attributes) { }
+                    node.x = Math.max(radius, Math.min(width - radius, node.x));
+
+                    // Constrain y-coordinate
+                    node.y = Math.max(radius, Math.min(height - radius, node.y));
+                });
+            }
+
             // Reheat the simulation when drag starts, and fix the subject position.
             function dragstarted(event) {
                 if (!event.active) simulation.alphaTarget(0.3).restart();
@@ -615,9 +635,6 @@
                 });
             }
         });
-
-
-
     </script>
 
 </body>
