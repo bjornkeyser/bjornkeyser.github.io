@@ -26,6 +26,10 @@
             position: relative;
         }
 
+        .page-wrapper {
+            overflow: visible !important;
+        }
+
         #left,
         #right {
             flex: 1;
@@ -163,7 +167,7 @@
                 },
                 {
                     title: "haikuki", id: 2, image_url: "Content/haikuki_thumbnail2.png", like_factor: 9, content_file: "haikuki.html", date: "2022-11-02",
-                    attributes: ["Python", "evolutionary algorithms", "book", "code", "design", "chemistry", "creativity", "dataviz"]
+                    attributes: ["Python", "evolutionary algorithms", "book", "code", "design", "chemistry", "creativity", "dataviz", "emergence"]
                 },
                 {
                     title: "reversing roles", id: 3, image_url: "Content/rr1.jpeg", like_factor: 7.75, content_file: "reversingroles.html", date: "2022-12-30",
@@ -175,25 +179,25 @@
                 },
                 {
                     title: "vertical split learning", id: 16, image_url: "Content/verticalsplitlearning.png", like_factor: 3, content_file: "verticalsplitlearning.html", date: "2022-09-30",
-                    attributes: ["artificial intelligence", "neural network", "finance", "fraud", "paper"]
+                    attributes: ["artificial intelligence", "neural network", "finance", "fraud", "paper", "publication"]
                 }
             ];
 
             const attributes = ["design", "code", "collective intelligence", "emergence", "Processing", "music", "visualizer", "Blender", "interactive", "compute shaders", "GLSL", "Unity", "cellular automata",
                 "Pure Data", "sound design", "TouchDesigner", "installation", "Python", "dataviz", "geometry nodes", "metaverse", "experiment", "consciousness", "Arduino", "paper", "neuroscience", "video",
-                "natural intelligence", "book", "creativity", "artificial intelligence", "poetry", "chemistry", "evolutionary algorithms", "GPT", "neural network", "finance", "fraud"];
+                "natural intelligence", "book", "creativity", "artificial intelligence", "poetry", "chemistry", "evolutionary algorithms", "GPT", "neural network", "finance", "fraud", "publication"];
 
             // Add a central node for the name "Björn"
-            const centralNode = { id: 0, title: "Björn" };
+            // const centralNode = { id: 0, title: "Björn" };
 
             // Create nodes for portfolio items, attributes, and the central node
-            const nodes = [...portfolioData, ...attributes.map(attr => ({ id: attr })), centralNode];
+            const nodes = [...portfolioData, ...attributes.map(attr => ({ id: attr }))];
 
             // Create links based on shared attributes and connections to the central node
             const links = [];
             portfolioData.forEach(item => {
                 // Connect portfolio items to the central node
-                links.push({ source: centralNode.id, target: item.id });
+                // links.push({ source: centralNode.id, target: item.id });
 
                 // Connect attributes to portfolio items
                 item.attributes.forEach(attr => {
@@ -212,14 +216,33 @@
             // Specify the color scale.
             const color = d3.scaleOrdinal(d3.schemeCategory10);
 
+            // Assuming you have a force simulation setup named 'simulation'
+
+            // Custom charge function
+            function customCharge(d) {
+                // Set a stronger repulsion for the central node (id = 0)
+                if (d.id === 0) {
+                    return -1200; // Adjust the charge strength as needed
+                }
+
+                // Set a stronger repulsion for nodes with attributes
+                if (d.attributes) {
+                    return -800; // Adjust the charge strength as needed
+                }
+
+                // Default charge for other nodes
+                return -200; // Adjust the charge strength as needed
+            }
+
             // Create a simulation with several forces.
             const simulation = d3.forceSimulation(nodes)
                 .force("link", d3.forceLink(links).id(d => d.id))
-                .force("charge", d3.forceManyBody().strength(-400))
+                // .force('charge', d3.forceManyBody().strength(customCharge))
+                .force('charge', d3.forceManyBody().strength(-400))
                 .force("center", d3.forceCenter(width / 2, height / 2))
-                .force("collide", d3.forceCollide().radius(40).strength(0.4)) // Adjust radius and strength as needed
-                .force("x", d3.forceX().strength(0.2).x(d => Math.min(width, Math.max(0, d.x))))
-                .force("y", d3.forceY().strength(0.2).y(d => Math.min(height, Math.max(0, d.y))))
+                .force("collide", d3.forceCollide().radius(40).strength(0.5)) // Adjust radius and strength as needed
+                .force("x", d3.forceX().strength(0.1).x(d => Math.min(width - 10, Math.max(10, d.x))))
+                .force("y", d3.forceY().strength(0.1).y(d => Math.min(height - 10, Math.max(10, d.y))))
                 .on("tick", ticked);
 
             // Create the SVG container.
@@ -275,7 +298,7 @@
                 .data(links)
                 .join("line");
 
-            link.attr("stroke-opacity", d => (d.source.id === 0) ? 0.8 : 0.2)
+            // link.attr("stroke-opacity", d => (d.source.id === 0) ? 0.8 : 0.2)
 
             const node = svg.append("g")
                 // .attr("stroke", "#000")
@@ -326,17 +349,15 @@
 
             node.on("mouseover", (event, node) => {
                 const connectedNodes = getConnectedNodes(node);
-
-                // Show titles for connected nodes
                 title.attr("display", d => connectedNodes.includes(d) || d.id === 0 ? "block" : "none");
-
                 rect.attr("display", d => connectedNodes.includes(d) || d.id === 0 ? "block" : "none");
-
-                circle.attr("fill-opacity", d => connectedNodes.includes(d) || d.id === 0 ? 1 : 0.6)
-
+                circle.attr("fill-opacity", d => connectedNodes.includes(d) || !node.attributes || d.id === 0 ? 1 : 0.2)
+                image.attr("opacity", d => connectedNodes.includes(d) ? "1" : "0.2");
                 link.style('stroke-opacity', function (l) {
                     if ((connectedNodes.includes(l.target) && l.source == node) || (connectedNodes.includes(l.source) && l.target == node)) {
                         return '0.8';
+                    } else {
+                        return '0';
                     }
                 });
             });
@@ -345,7 +366,8 @@
                 title.attr("display", d => d.id === 0 ? "block" : "none");
                 rect.attr("display", d => d.id === 0 ? "block" : "none");
                 circle.filter(d => d.id !== 0).attr("fill-opacity", 0.6);
-                link.attr("stroke-opacity", d => (d.source.id === 0) ? 0.8 : 0.2);
+                image.attr("opacity", "1");
+                link.style("stroke-opacity", '0.2');
             });
 
             function handleZoom(e) {
@@ -634,6 +656,7 @@
                     autoCenter: true
                 });
                 $('.flipbook').turn('peel', 'tr');
+
             }
         }
     </script>
