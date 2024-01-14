@@ -30,16 +30,20 @@
             overflow: visible !important;
         }
 
-        #left,
-        #right {
-            flex: 1;
-            /* border: 10px solid pink; */
-            padding: 10px;
+        #left {
+            flex: 2;
         }
 
         #right {
+            flex: 1;
             background-color: #f0f0f0;
         }
+
+        #left,
+        #right {
+            padding: 10px;
+        }
+
 
         #timeline {
             position: absolute;
@@ -115,7 +119,7 @@
                 // TODO: ADD DOODLE
                 {
                     title: "breath affects", id: 4, image_url: "Content/breath.gif", like_factor: 8, content_file: "breathaffects.html", date: "2022-03-24",
-                    attributes: ["design", "code", "collective intelligence", "emergence", "Processing", "video"],
+                    attributes: ["design", "code", "collective intelligence", "emergence", "Processing", "video", "biology"],
                 },
                 {
                     title: "flocka", id: 8, image_url: "Content/flockfuck1.png", like_factor: 8, content_file: "flocka.html", date: "2021-07-01",
@@ -139,27 +143,27 @@
                 },
                 {
                     title: "textual tension", id: 6, image_url: "Content/textualtension3.png", like_factor: 8, content_file: "textualtension.html", date: "2022-06-09",
-                    attributes: ["Processing", "Pure Data", "interactive", "dataviz", "Python", "installation", "video", "visualizer"]
+                    attributes: ["design", "Processing", "Pure Data", "interactive", "dataviz", "Python", "installation", "video", "visualizer"]
                 },
                 {
                     title: "metaWHAT!?", id: 7, image_url: "Content/metawhat1.jpeg", like_factor: 8, content_file: "metawhat.html", date: "2022-07-01",
-                    attributes: ["Blender", "Python", "geometry nodes", "metaverse", "installation", "dataviz"]
+                    attributes: ["Blender", "Python", "geometry nodes", "metaverse", "installation", "dataviz", "finance", "design"]
                 },
                 {
                     title: "screaming plants", id: 11, image_url: "Content/screamingplants.png", like_factor: 7, content_file: "screamingplants.html", date: "2023-02-01",
-                    attributes: ["experiment", "installation", "consciousness", "Arduino", "video"]
+                    attributes: ["experiment", "installation", "consciousness", "Arduino", "video", "biology"]
                 },
                 {
                     title: "delay", id: 12, image_url: "Content/delay_screenshot.png", like_factor: 9, content_file: "delay.html", date: "2023-07-06",
-                    attributes: ["experiment", "paper", "consciousness", "neuroscience", "video"]
+                    attributes: ["experiment", "paper", "consciousness", "neuroscience", "video", "Pure Data"]
                 },
                 {
                     title: "human magnetoreception", id: 13, image_url: "Content/magnetoreception.png", like_factor: 9, content_file: "magnetoreception.html", date: "2024-06-04",
-                    attributes: ["experiment", "paper", "consciousness", "neuroscience", "video", "Arduino", "natural intelligence"]
+                    attributes: ["experiment", "paper", "consciousness", "neuroscience", "video", "Arduino", "natural intelligence", "biology"]
                 },
                 {
                     title: "physarum", id: 14, image_url: "Content/physarum.png", like_factor: 9, content_file: "physarum.html", date: "2022-09-26",
-                    attributes: ["code", "design", "emergence", "collective intelligence", "Unity", "compute shaders", "GLSL", "video"]
+                    attributes: ["code", "design", "emergence", "collective intelligence", "Unity", "compute shaders", "GLSL", "video", "biology"]
                 },
                 {
                     title: "blackout poetry", id: 1, image_url: "Content/arraysure1.png", like_factor: 7.5, content_file: "blackout.html", date: "2022-10-15",
@@ -180,12 +184,20 @@
                 {
                     title: "vertical split learning", id: 16, image_url: "Content/verticalsplitlearning.png", like_factor: 3, content_file: "verticalsplitlearning.html", date: "2022-09-30",
                     attributes: ["artificial intelligence", "neural network", "finance", "fraud", "paper", "publication"]
+                },
+                {
+                    title: "mirrosis", id: 18, image_url: "Content/mirrosis2.jpg", like_factor: 8, content_file: "mirrosis.html", date: "2023-09-14",
+                    attributes: ["design", "Blender", "emergence", "geometry nodes", "video"],
+                },
+                {
+                    title: "silicon clouds", id: 19, image_url: "Content/cloud.jpg", like_factor: 7, content_file: "clouds.html", date: "2023-04-06",
+                    attributes: ["Blender", "design", "geometry nodes", "video"],
                 }
             ];
 
             const attributes = ["design", "code", "collective intelligence", "emergence", "Processing", "music", "visualizer", "Blender", "interactive", "compute shaders", "GLSL", "Unity", "cellular automata",
                 "Pure Data", "sound design", "TouchDesigner", "installation", "Python", "dataviz", "geometry nodes", "metaverse", "experiment", "consciousness", "Arduino", "paper", "neuroscience", "video",
-                "natural intelligence", "book", "creativity", "artificial intelligence", "poetry", "chemistry", "evolutionary algorithms", "GPT", "neural network", "finance", "fraud", "publication"];
+                "natural intelligence", "book", "creativity", "artificial intelligence", "poetry", "chemistry", "evolutionary algorithms", "GPT", "neural network", "finance", "fraud", "publication", "biology"];
 
             // Add a central node for the name "Björn"
             // const centralNode = { id: 0, title: "Björn" };
@@ -220,11 +232,6 @@
 
             // Custom charge function
             function customCharge(d) {
-                // Set a stronger repulsion for the central node (id = 0)
-                if (d.id === 0) {
-                    return -1200; // Adjust the charge strength as needed
-                }
-
                 // Set a stronger repulsion for nodes with attributes
                 if (d.attributes) {
                     return -800; // Adjust the charge strength as needed
@@ -238,7 +245,7 @@
             const simulation = d3.forceSimulation(nodes)
                 .force("link", d3.forceLink(links).id(d => d.id))
                 // .force('charge', d3.forceManyBody().strength(customCharge))
-                .force('charge', d3.forceManyBody().strength(-400))
+                .force('charge', d3.forceManyBody().strength(-350))
                 .force("center", d3.forceCenter(width / 2, height / 2))
                 .force("collide", d3.forceCollide().radius(40).strength(0.5)) // Adjust radius and strength as needed
                 .force("x", d3.forceX().strength(0.1).x(d => Math.min(width - 10, Math.max(10, d.x))))
@@ -252,42 +259,6 @@
                 .attr("height", "100%")
             // .attr("viewBox", [0, 0, width, height])
             // .attr("style", "max-width: 100%; height: auto;");
-
-            // svg.call(d3.drag()
-            //     .on("start", dragstarted)
-            //     .on("drag", dragged)
-            //     .on("end", dragended));
-
-
-            const parseDate = d3.timeParse("%Y-%m-%d");
-
-            const minDate = d3.min(nodes.filter(node => node.attributes), d => parseDate(d.date));
-            const maxDate = d3.max(nodes.filter(node => node.attributes), d => parseDate(d.date));
-
-            const xScale = d3.scaleTime()
-                .domain([minDate, maxDate])
-                .range([10, width * (2 / 3)]);
-
-            const dots = svg.selectAll(".dot")
-                .data(nodes.filter(node => node.attributes))
-                .enter()
-                .append("circle")
-                .attr("class", "dot")
-                .attr("cx", d => xScale(parseDate(d.date)))
-                .attr("cy", height - 30)
-                .attr("fill", "black")
-                .attr("r", 5);
-
-            const timestamp = dots.append("text")
-                .text(d => d.date) // Assuming d.date is the timestamp
-                // .attr("font-family", "system-ui")
-                // .attr("font-weight", "100")
-                .attr("font-size", "100px")
-                .style("fill", "white")
-                .style("stroke", "white")
-                .style('position', 'absolute')
-                .attr("x", "0")
-                .attr("y", "0");
 
             // Add a line for each link, and a circle for each node.
             const link = svg.append("g")
@@ -308,7 +279,8 @@
                 .data(nodes)
                 .join("g")
                 .on("click", handleNodeClick)
-                .style("mix-blend-mode", "difference"); // Adjust the blend mode as needed
+            // .style("transform", "translate3d(0,0,0)")   // Should fix color blend on Safari? TODO
+            // .style("mix-blend-mode", "difference"); // Adjust the blend mode as needed
 
             const circle = node.filter(d => !d.attributes)
                 .append("circle")
@@ -347,27 +319,154 @@
 
             title.filter(d => d.id === 0 || !d.attributes).attr("class", "title");
 
+            const parseDate = d3.timeParse("%Y-%m-%d");
+
+            const minDate = d3.min(nodes.filter(node => node.attributes), d => parseDate(d.date));
+            const maxDate = d3.max(nodes.filter(node => node.attributes), d => parseDate(d.date));
+
+            const xScale = d3.scaleTime()
+                .domain([minDate, maxDate])
+                .range([5, width - 140]);
+
+            // TODO: Remove const dots, but when I do it all nodes are fucked
+            const dots = svg.selectAll(".dot")
+                .data(nodes.filter(node => node.attributes))
+                .enter()
+                .append("circle")
+                .attr("class", "dot")
+                .attr("cx", d => xScale(parseDate(d.date)))
+                .attr("cy", height - 30)
+                .attr("fill", "pink")
+                .attr("fill-opacity", "0")
+                .attr("r", 5);
+
+            // Create a group for time dots
+            const timeDotsGroup = svg.append("g")
+                .attr("class", "time-dots");
+
+            // Create time dots
+            const timeDots = timeDotsGroup.selectAll(".time-dot")
+                .data(nodes.filter(node => node.date))
+                .enter()
+                .append("circle")
+                .attr("class", "time-dot")
+                .attr("cx", d => xScale(parseDate(d.date)))
+                .attr("cy", height - 30) // Position the dots at a fixed vertical position
+                .attr("r", 5) // Radius of the dots
+                .attr("fill", "black");
+
+            timeDots.on("mouseover", function (event, d) {
+                d3.select(this).style("cursor", "pointer");
+                timeDots.attr("r", dot => dot.date === d.date ? "8" : "5");
+                timeLabels.filter(label => label === d)
+                    .style("opacity", 1);
+            })
+                .on("mouseout", function (event, d) {
+                    timeDots.attr("r", "5");
+                    timeLabels.filter(label => label === d)
+                        .style("opacity", 0);
+                })
+                .on("click", function (event, d) {
+                    const contentContainer = d3.select("#content-container");
+                    fetch("subpages/" + d.content_file)
+                        .then(response => response.text())
+                        .then(content => {
+                            contentContainer.html(content);
+                            doFlip();
+                        })
+                        .catch(error => {
+                            console.error("Error fetching content:", error);
+                            contentContainer.html("<p>Error loading content.</p>");
+                        });
+                    timeDots.attr("fill", dot => dot.date === d.date ? "red" : "black");
+                    timeLabels.style("opacity", dot => dot.date === d.date ? 1 : 0);
+
+                });
+
+
+            // Create a group for time labels
+            const timeLabelsGroup = svg.append("g")
+                .attr("class", "time-labels");
+
+            // Create labels for time dots
+            const timeLabels = timeLabelsGroup.selectAll(".time-label")
+                .data(nodes)
+                .enter()
+                .append("text")
+                .attr("class", "time-label")
+                .attr("x", d => xScale(parseDate(d.date)))
+                .attr("y", height - 40) // Position the labels above the dots
+                .text(d => d.date) // Display the date as the label
+                .attr("text-anchor", "middle")
+                .attr("font-size", "10px")
+                .style("opacity", 0);
+
+            // const label = svg.selectAll(".label")
+            //     .data(nodes.filter(node => node.attributes))
+            //     .enter()
+            //     .append("text")
+            //     .attr("class", "label")
+            //     .attr("x", d => xScale(parseDate(d.date)))
+            //     .attr("y", height - 30)
+            //     .attr("dy", "-10") // Adjust this value to position the label above the circle
+            //     .text(d => d.date)
+            //     .attr("text-anchor", "middle") // Centers the text above the circle
+            //     .attr("font-size", "10px"); // Adjust font size as needed
+
             node.on("mouseover", (event, node) => {
                 const connectedNodes = getConnectedNodes(node);
-                title.attr("display", d => connectedNodes.includes(d) || d.id === 0 ? "block" : "none");
-                rect.attr("display", d => connectedNodes.includes(d) || d.id === 0 ? "block" : "none");
-                circle.attr("fill-opacity", d => connectedNodes.includes(d) || !node.attributes || d.id === 0 ? 1 : 0.2)
-                image.attr("opacity", d => connectedNodes.includes(d) ? "1" : "0.2");
-                link.style('stroke-opacity', function (l) {
-                    if ((connectedNodes.includes(l.target) && l.source == node) || (connectedNodes.includes(l.source) && l.target == node)) {
-                        return '0.8';
-                    } else {
-                        return '0';
-                    }
-                });
+                const transitionDuration = 0; // 500 milliseconds
+
+                title.transition()
+                    .duration(transitionDuration)
+                    .attr("display", d => connectedNodes.includes(d) || d.id === 0 ? "block" : "none");
+
+                rect.transition()
+                    .duration(transitionDuration)
+                    .attr("display", d => connectedNodes.includes(d) || d.id === 0 ? "block" : "none");
+
+                circle.transition()
+                    .duration(transitionDuration)
+                    .attr("fill-opacity", d => connectedNodes.includes(d) || !node.attributes || d.id === 0 ? 1 : 0.2);
+
+                image.transition()
+                    .duration(transitionDuration)
+                    .attr("opacity", d => connectedNodes.includes(d) ? "1" : "0.2");
+
+                link.transition()
+                    .duration(transitionDuration)
+                    .style('stroke-opacity', l => {
+                        if ((connectedNodes.includes(l.target) && l.source == node) || (connectedNodes.includes(l.source) && l.target == node)) {
+                            return '0.8';
+                        } else {
+                            return '0';
+                        }
+                    });
             });
 
             node.on("mouseout", function (d) {
-                title.attr("display", d => d.id === 0 ? "block" : "none");
-                rect.attr("display", d => d.id === 0 ? "block" : "none");
-                circle.filter(d => d.id !== 0).attr("fill-opacity", 0.6);
-                image.attr("opacity", "1");
-                link.style("stroke-opacity", '0.2');
+                const transitionDuration = 0;
+
+                title.transition()
+                    .duration(transitionDuration)
+                    .attr("display", d => d.id === 0 ? "block" : "none");
+
+                rect.transition()
+                    .duration(transitionDuration)
+                    .attr("display", d => d.id === 0 ? "block" : "none");
+
+                circle.filter(d => d.id !== 0)
+                    .transition()
+                    .duration(transitionDuration)
+                    .attr("fill-opacity", 0.6);
+
+                image.transition()
+                    .duration(transitionDuration)
+                    .attr("opacity", "1");
+
+                link.transition()
+                    .duration(transitionDuration)
+                    .style("stroke-opacity", '0.2');
             });
 
             function handleZoom(e) {
@@ -398,15 +497,15 @@
                 // Check if content_file is defined before fetching
                 if (d.content_file) {
                     // Highlight the corresponding dot in red
-                    dots.attr('fill', (dot => dot.date === d.date ? "red" : "black"));
-                    dots.attr('r', (dot => dot.date === d.date ? "8" : "4"));
+                    timeDots.attr("fill", dot => dot.date === d.date ? "red" : "black");
+                    timeLabels.style("opacity", dot => dot.date === d.date ? 1 : 0);
 
                     // Fetch content from the specified content_file
                     fetch("subpages/" + d.content_file)
                         .then(response => response.text())
                         .then(content => {
                             // Update the content in the right column
-                            adjustColumnSpace(document.getElementById('right'));
+                            // adjustColumnSpace(document.getElementById('right'));
                             contentContainer.html(content);
                             doFlip();
                         })
@@ -416,7 +515,7 @@
                         });
                 } else {
                     // Handle the case where content_file is not defined (central node, for example)
-                    adjustColumnSpace(document.getElementById('right'));
+                    // adjustColumnSpace(document.getElementById('right'));
 
                     // Display links in the content-container
                     const connectedLinks = links.filter(link => link.source === d || link.target === d);
@@ -572,8 +671,8 @@
                     .attr("cy", height - 30);
 
                 // Update the positions of the timestamp text elements
-                timestamp.attr("x", width / 2)
-                    .attr("y", height / 2);
+                // timestamp.attr("x", width / 2)
+                //     .attr("y", height / 2);
 
                 circle
                     .attr("cx", d => d.x)
@@ -626,7 +725,7 @@
             leftCol.addEventListener('click', function (event) {
                 if (event.target.tagName === 'image') {
                     // If a node is clicked, call adjustColumnSpace(right)
-                    adjustColumnSpace(rightCol);
+                    adjustColumnSpace(leftCol);
                 } else {
                     adjustColumnSpace(leftCol);
                 }
@@ -652,11 +751,11 @@
         function doFlip() {
             if ($('.flipbook').length > 0) {
                 $('.flipbook').turn({
-                    // Options for turn.js
+                    width: 800,
+                    height: 600,
                     autoCenter: true
                 });
                 $('.flipbook').turn('peel', 'tr');
-
             }
         }
     </script>
