@@ -1,89 +1,788 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Björn Keyser</title>
-  <link rel="stylesheet" href="styles.css">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
-  <script src="script.js" defer></script>
-  <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script type="text/javascript" src="turnjs4/lib/turn.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Björn Keyser</title>
+    <link rel="stylesheet" href="styles_new.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <!-- <script src="script.js" defer></script> -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="turnjs4/lib/turn.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        /* Your existing styles for columns */
+        .wrapper {
+            display: flex;
+            height: 100vh;
+        }
+
+        .column {
+            flex-grow: 1;
+            overflow-y: auto;
+            box-sizing: border-box;
+            transition: flex-grow 0.3s ease;
+            position: relative;
+        }
+
+        .page-wrapper {
+            overflow: visible !important;
+        }
+
+        #left {
+            flex: 2;
+        }
+
+        #right {
+            flex: 1;
+            background-color: #f0f0f0;
+        }
+
+        #left,
+        #right {
+            padding: 10px;
+        }
+
+
+        #timeline {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            /* Adjust the height as needed */
+            background-color: #000;
+            /* Adjust the color as needed */
+            z-index: 2;
+        }
+
+        .dot {
+            /* fill: #000; */
+            /* r: 4; */
+        }
+
+
+        #d3-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        #content-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        svg {
+            background-image: linear-gradient(45deg, #dedede 25%, transparent 25%, transparent 75%, #dedede 75%, #dedede),
+                linear-gradient(45deg, #dedede 25%, transparent 25%, transparent 75%, #dedede 75%, #dedede);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            background-color: #f0f0f0;
+            /* /* Set a default background color */
+        }
+
+        .node {
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.4));
+        }
+
+        /* image {
+            mix-blend-mode: exclusion;
+        } */
+    </style>
 </head>
+
 <body>
 
-<div class="wrapper">
-<div id="overlay" style="display: none;">
-    <img id="overlay-image" src="" alt="Expanded Image">
-</div> 
-   
-  <div class="column" id="bioColumn">
-    <p id="aboutText">
-        <!-- Björn Keyser is a multidisciplinary artist & researcher. 
-            i know, boooo buzzwords, but I simply could never choose between the 2. 
-            My boredom with computer science led me to research [design using code], as well as [data visualization & interaction]. 
-            I also have a lifelong interest in [consciousness] which led me to study the minds of slime molds, fireflies, plants, and humans. 
-            When in doubt of your own consciousness, always remember that we are the only ones capable of creativity, a computer can't be.. or [can it]? -->
-        <span class="title"><a href="./index.html">BJöRN KEYSER</a></span>. I am a student researcher and a designer. I diverged from the path of <br><span data-category="computer-science">[computer science]</span><br> when I found the chaotic creativity of 
-        <br><span data-category="design-code">[design using code]</span><br> and the storytelling power of 
-        <br><span data-category="data-visualization-interaction">[data visualization & interaction]</span>. <br> Fascinated by the enigma of 
-        <br><span data-category="consciousness">[consciousness & intelligence]</span>, <br> I've researched the minds of some hosts: from slime molds to plants to computers to my own brain. 
-        Pondering our consciousness, one might conclude that a computer couldn't possibly share this trait because it lacks creativity... but then, 
-        <br><span data-category="ai-creativity">[does it?]</span>
-        <a href="https://www.instagram.com/bjornze56k" target="_blank" class="instagram-link">
-          <i class="fab fa-instagram"></i>bjornze56k
-        </a>  
-        
-    </p>
-    <!-- Add more bio content here -->
-  </div>
-  <div class="column" id="projectsColumn">
-    <div id="imagePreview" class="project-image-preview"></div> <!-- Container for the image preview -->
-    <div class="data-container">
-        <ul id="projectsList">
-        <!-- Project items will be appended here -->
-            <li class="data-item" data-date="2022-03-24" data-project-id="4">Breath Affects</li>
-            <li class="data-item"  data-date="2021-07-01" data-project-id="8">Flocka</li>
-            <li class="data-item" data-date="2023-10-02" data-project-id="15">Tuner</li>
-            <li class="data-item" data-date="2022-08-10" data-project-id="9">Cyclic Cellular Automata</li>
-            <li class="data-item" data-date="2022-04-26" data-project-id="5">Spatial Whispers</li>
-            <li class="data-item" data-date="2022-06-09" data-project-id="6">Textual Tension</li>
-            <li class="data-item" data-date="2022-08-01" data-project-id="7">metaWHAT!?</li>
-            <li class="data-item" data-date="2023-02-01" data-project-id="11">Screaming Plants</li>
-            <li class="data-item" data-date="2023-07-06" data-project-id="12">Delay Experiment</li>
-            <li class="data-item" data-date="2024-06-04" data-project-id="13">Human Magnetoreception - draft</li>
-            <li class="data-item" data-date="2022-09-26" data-project-id="14">Physarum</li>
-            <li class="data-item" data-date="2022-10-15" data-project-id="1">Blackout Poetry</li>
-            <li class="data-item" data-date="2022-11-02" data-project-id="2">Haikuki</li>
-            <li class="data-item" data-date="2022-12-30" data-project-id="3">Reversing roles</li>
-            <li class="data-item" data-date="2021-07-01" data-project-id="10">Split Learning for Finance</li>
-            <li class="data-item" data-date="2022-09-30" data-project-id="16">Vertical Split Learning</li>
-                    
-        </ul>
+    <div class="wrapper">
+        <div id="overlay" style="display: none;">
+            <img id="overlay-image" src="" alt="Expanded Image">
+        </div>
+        <div id="left" class="column">
+            <div id="timeline"></div>
+        </div>
+        <div id="right" class="column">
+            <div id="d3-container"></div>
+            <!-- D3 simulation container -->
+            <div id="content-container"></div>
+        </div>
     </div>
-    <div class="timeline"></div>
-  </div>
-  <div class="column" id="detailsColumn">
-    <div id="projectDetails">
-      <!-- Project details will be shown here -->
-    </div>
-  </div>
-</div>
 
-<script>
-    $(document).ready(function() {
-        // Initialize the flipbook
-        if ($('.flipbook').length > 0) {
-            $('.flipbook').turn({
-                // Options for turn.js
-                autoCenter: true
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Portfolio data with added attributes
+            const portfolioData = [
+                // TODO: ADD DOODLE
+                {
+                    title: "breath affects", id: 4, image_url: "Content/breath.gif", like_factor: 8, content_file: "breathaffects.html", date: "2022-03-24",
+                    attributes: ["design", "code", "collective intelligence", "emergence", "Processing", "video", "biology"],
+                },
+                {
+                    title: "flocka", id: 8, image_url: "Content/flockfuck1.png", like_factor: 8, content_file: "flocka.html", date: "2021-07-01",
+                    attributes: ["design", "code", "emergence", "Processing"],
+                },
+                {
+                    title: "TUNER", id: 15, image_url: "Content/tuner_letgo.png", like_factor: 8, content_file: "tuner.html", date: "2022-08-08",
+                    attributes: ["music", "visualizer", "Blender", "design", "video"]
+                },
+                {
+                    title: "doodle", id: 17, image_url: "Content/doodle.png", like_factor: 7, content_file: "doodle.html", date: "2022-06-24",
+                    attributes: ["music", "visualizer", "TouchDesigner", "design", "video"]
+                },
+                {
+                    title: "cca", id: 9, image_url: "Content/cca.png", like_factor: 8, content_file: "cca.html", date: "2022-08-10",
+                    attributes: ["compute shaders", "GLSL", "Unity", "emergence", "code", "design", "cellular automata", "music", "visualizer", "video"]
+                },
+                {
+                    title: "spatial whispers", id: 5, image_url: "Content/sonicwhispers.png", like_factor: 5, content_file: "spatialwhispers.html", date: "2022-04-26",
+                    attributes: ["Pure Data", "interactive", "sound design", "TouchDesigner"]
+                },
+                {
+                    title: "textual tension", id: 6, image_url: "Content/textualtension3.png", like_factor: 8, content_file: "textualtension.html", date: "2022-06-09",
+                    attributes: ["design", "Processing", "Pure Data", "interactive", "dataviz", "Python", "installation", "video", "visualizer"]
+                },
+                {
+                    title: "metaWHAT!?", id: 7, image_url: "Content/metawhat1.jpeg", like_factor: 8, content_file: "metawhat.html", date: "2022-07-01",
+                    attributes: ["Blender", "Python", "geometry nodes", "metaverse", "installation", "dataviz", "finance", "design"]
+                },
+                {
+                    title: "screaming plants", id: 11, image_url: "Content/screamingplants.png", like_factor: 7, content_file: "screamingplants.html", date: "2023-02-01",
+                    attributes: ["experiment", "installation", "consciousness", "Arduino", "video", "biology"]
+                },
+                {
+                    title: "delay", id: 12, image_url: "Content/delay_screenshot.png", like_factor: 9, content_file: "delay.html", date: "2023-07-06",
+                    attributes: ["experiment", "paper", "consciousness", "neuroscience", "video", "Pure Data"]
+                },
+                {
+                    title: "human magnetoreception", id: 13, image_url: "Content/magnetoreception.png", like_factor: 9, content_file: "magnetoreception.html", date: "2024-06-04",
+                    attributes: ["experiment", "paper", "consciousness", "neuroscience", "video", "Arduino", "natural intelligence", "biology"]
+                },
+                {
+                    title: "physarum", id: 14, image_url: "Content/physarum.png", like_factor: 9, content_file: "physarum.html", date: "2022-09-26",
+                    attributes: ["code", "design", "emergence", "collective intelligence", "Unity", "compute shaders", "GLSL", "video", "biology"]
+                },
+                {
+                    title: "blackout poetry", id: 1, image_url: "Content/arraysure1.png", like_factor: 7.5, content_file: "blackout.html", date: "2022-10-15",
+                    attributes: ["Processing", "design", "book", "creativity", "artificial intelligence", "poetry"]
+                },
+                {
+                    title: "haikuki", id: 2, image_url: "Content/haikuki_thumbnail2.png", like_factor: 9, content_file: "haikuki.html", date: "2022-11-02",
+                    attributes: ["Python", "evolutionary algorithms", "book", "code", "design", "chemistry", "creativity", "dataviz", "emergence"]
+                },
+                {
+                    title: "reversing roles", id: 3, image_url: "Content/rr1.jpeg", like_factor: 7.75, content_file: "reversingroles.html", date: "2022-12-30",
+                    attributes: ["book", "code", "design", "GPT", "artificial intelligence", "natural intelligence", "creativity"]
+                },
+                {
+                    title: "split learning for finance", id: 10, image_url: "Content/splitlearning.png", like_factor: 3, content_file: "splitlearning.html", date: "2021-07-01",
+                    attributes: ["artificial intelligence", "neural network", "finance", "fraud", "paper"]
+                },
+                {
+                    title: "vertical split learning", id: 16, image_url: "Content/verticalsplitlearning.png", like_factor: 3, content_file: "verticalsplitlearning.html", date: "2022-09-30",
+                    attributes: ["artificial intelligence", "neural network", "finance", "fraud", "paper", "publication"]
+                },
+                {
+                    title: "mirrosis", id: 18, image_url: "Content/mirrosis2.jpg", like_factor: 8, content_file: "mirrosis.html", date: "2023-09-14",
+                    attributes: ["design", "Blender", "emergence", "geometry nodes", "video"],
+                },
+                {
+                    title: "silicon clouds", id: 19, image_url: "Content/cloud.jpg", like_factor: 7, content_file: "clouds.html", date: "2023-04-06",
+                    attributes: ["Blender", "design", "geometry nodes", "video"],
+                }
+            ];
+
+            const attributes = ["design", "code", "collective intelligence", "emergence", "Processing", "music", "visualizer", "Blender", "interactive", "compute shaders", "GLSL", "Unity", "cellular automata",
+                "Pure Data", "sound design", "TouchDesigner", "installation", "Python", "dataviz", "geometry nodes", "metaverse", "experiment", "consciousness", "Arduino", "paper", "neuroscience", "video",
+                "natural intelligence", "book", "creativity", "artificial intelligence", "poetry", "chemistry", "evolutionary algorithms", "GPT", "neural network", "finance", "fraud", "publication", "biology"];
+
+            // Add a central node for the name "Björn"
+            // const centralNode = { id: 0, title: "Björn" };
+
+            // Create nodes for portfolio items, attributes, and the central node
+            const nodes = [...portfolioData, ...attributes.map(attr => ({ id: attr }))];
+
+            // Create links based on shared attributes and connections to the central node
+            const links = [];
+            portfolioData.forEach(item => {
+                // Connect portfolio items to the central node
+                // links.push({ source: centralNode.id, target: item.id });
+
+                // Connect attributes to portfolio items
+                item.attributes.forEach(attr => {
+                    links.push({ source: item.id, target: attr });
+                });
             });
+
+            // Specify the dimensions of the chart.
+            var width = document.getElementById('left').offsetWidth;
+            var height = document.getElementById('left').offsetHeight;
+            const nodeRadius = 10;
+
+            // Specify the image size scale
+            const imgScale = 100;
+
+            // Specify the color scale.
+            const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+            // Assuming you have a force simulation setup named 'simulation'
+
+            // Custom charge function
+            function customCharge(d) {
+                // Set a stronger repulsion for nodes with attributes
+                if (d.attributes) {
+                    return -800; // Adjust the charge strength as needed
+                }
+
+                // Default charge for other nodes
+                return -200; // Adjust the charge strength as needed
+            }
+
+            // Create a simulation with several forces.
+            const simulation = d3.forceSimulation(nodes)
+                .force("link", d3.forceLink(links).id(d => d.id))
+                // .force('charge', d3.forceManyBody().strength(customCharge))
+                .force('charge', d3.forceManyBody().strength(-350))
+                .force("center", d3.forceCenter(width / 2, height / 2))
+                .force("collide", d3.forceCollide().radius(40).strength(0.5)) // Adjust radius and strength as needed
+                .force("x", d3.forceX().strength(0.1).x(d => Math.min(width - 10, Math.max(10, d.x))))
+                .force("y", d3.forceY().strength(0.1).y(d => Math.min(height - 10, Math.max(10, d.y))))
+                .on("tick", ticked);
+
+            // Create the SVG container.
+            const svg = d3.select("#d3-container")
+                .append("svg")
+                .attr("width", "100%")
+                .attr("height", "100%")
+            // .attr("viewBox", [0, 0, width, height])
+            // .attr("style", "max-width: 100%; height: auto;");
+
+            // Add a line for each link, and a circle for each node.
+            const link = svg.append("g")
+                .attr("stroke", "#000")
+                .attr("stroke-opacity", 0.2)
+                .attr("stroke-width", 1.5)
+                .selectAll()
+                .data(links)
+                .join("line");
+
+            // link.attr("stroke-opacity", d => (d.source.id === 0) ? 0.8 : 0.2)
+
+            const node = svg.append("g")
+                // .attr("stroke", "#000")
+                .attr("stroke-width", 1.5)
+                .attr("class", "node")
+                .selectAll()
+                .data(nodes)
+                .join("g")
+                .on("click", handleNodeClick)
+            // .style("transform", "translate3d(0,0,0)")   // Should fix color blend on Safari? TODO
+            // .style("mix-blend-mode", "difference"); // Adjust the blend mode as needed
+
+            const circle = node.filter(d => !d.attributes)
+                .append("circle")
+                .attr("r", nodeRadius)
+                .attr("fill", 'white')
+                .attr("fill-opacity", d => d.id === 0 ? 1 : 0.6);
+
+            const image = node.filter(d => d.attributes)
+                .append("svg:image")
+                .attr('width', d => imgScale)
+                .attr('height', d => imgScale)
+                .attr("xlink:href", d => d.image_url)
+                // .attr("border-radius", '50%')
+                .attr("x", d => d.x - imgScale / 2)  // Center horizontally
+                .attr("y", d => d.y - imgScale / 2); // Center vertically
+
+            // Add rectangles behind node text
+            const rect = node.append("rect")
+                .attr("dx", d => 10)
+                .attr("dy", 5)
+                .attr("width", d => d.id === 0 ? 60 : (d.attributes ? d.title.length * 7 : d.id.length * 8))
+                .attr("height", 20) // Set the height of the rectangle
+                .attr("display", d => d.id === 0 ? "block" : "none")
+                .attr("fill", d => d.attributes ? "black" : "white") // Set the fill color
+
+            // Add text labels for all nodes    
+            const title = node.append("text")
+                .text(d => (d.id == 0) ? "björn" : (d.attributes ? d.title : d.id))
+                .attr("dx", 10)
+                .attr("dy", 5)
+                .attr("font-family", "system-ui")
+                .attr("display", d => d.id === 0 ? "block" : "none")
+                .attr("font-weight", "100")
+                .attr("font-size", (d => (d.id == 0) ? "25px" : "15px"))
+                .attr("stroke", d => d.attributes ? "white" : "black") // Set the fill color
+
+            title.filter(d => d.id === 0 || !d.attributes).attr("class", "title");
+
+            const parseDate = d3.timeParse("%Y-%m-%d");
+
+            const minDate = d3.min(nodes.filter(node => node.attributes), d => parseDate(d.date));
+            const maxDate = d3.max(nodes.filter(node => node.attributes), d => parseDate(d.date));
+
+            const xScale = d3.scaleTime()
+                .domain([maxDate, minDate])
+                .range([20, height - 50]);
+
+            // TODO: Remove const dots, but when I do it all nodes are fucked
+            const dots = svg.selectAll(".dot")
+                .data(nodes.filter(node => node.attributes))
+                .enter()
+                .append("circle")
+                .attr("class", "dot")
+                .attr("cx", d => xScale(parseDate(d.date)))
+                .attr("cy", height - 30)
+                .attr("fill", "pink")
+                .attr("fill-opacity", "0")
+                .attr("r", 5);
+
+            // Create a group for time dots
+            const timeDotsGroup = svg.append("g")
+                .attr("class", "not-zoomable time-dots");
+
+            const timeDotWidth = 20; // Width of the horizontal line representing each time dot
+
+            const timeDots = timeDotsGroup.selectAll(".time-dot")
+                .data(nodes.filter(node => node.date))
+                .enter()
+                .append("line")
+                .attr("class", "time-dots not-zoomable")
+                .attr("x1", d => 10 - timeDotWidth / 2)
+                .attr("y1", d => xScale(parseDate(d.date)))
+                .attr("x2", d => 10 + timeDotWidth / 2)
+                .attr("y2", d => xScale(parseDate(d.date)))
+                .attr("stroke", "black")
+                .attr("stroke-width", 4); // Thickness of the horizontal line
+
+            // Create a vertical timeline
+            svg.append("line")
+                .attr("class", "not-zoomable")
+                .attr("x1", 10)
+                .attr("y1", 0)
+                .attr("x2", 10)
+                .attr("y2", height)
+                .attr("stroke", "black")
+                .attr("stroke-opacity", 0.2)
+                .attr("stroke-width", 2);
+
+
+            timeDots.on("mouseover", function (event, d) {
+                d3.select(this).style("cursor", "pointer");
+                timeLabels.filter(label => label === d)
+                    .style("opacity", 1);
+                const contentContainer = d3.select("#content-container");
+                fetch("subpages/" + d.content_file)
+                    .then(response => response.text())
+                    .then(content => {
+                        contentContainer.html(content);
+                        doFlip();
+                    })
+                    .catch(error => {
+                        console.error("Error fetching content:", error);
+                        contentContainer.html("<p>Error loading content.</p>");
+                    });
+                timeDots.attr("stroke", dot => dot.date === d.date ? "red" : "black");
+                timeDots.attr("x2", dot => dot.date === d.date ? 60 : 10 + timeDotWidth / 2)
+                timeLabels.style("opacity", dot => dot.date === d.date ? 1 : 0);
+
+            })
+                .on("mouseout", function (event, d) {
+                    timeDots.attr("r", "5");
+                    timeLabels.filter(label => label === d)
+                        .style("opacity", 0);
+                })
+                .on("click", function (event, d) {
+
+                });
+
+
+            // Create a group for time labels
+            const timeLabelsGroup = svg.append("g")
+                .attr("class", "time-labels not-zoomable");
+
+            // Create labels for time dots
+            const timeLabels = timeLabelsGroup.selectAll(".time-label")
+                .data(nodes)
+                .enter()
+                .append("text")
+                .attr("class", "time-label")
+                .attr("x", 50)
+                .attr("y", d => xScale(parseDate(d.date)) - 5) // Position the labels above the dots
+                .text(d => d.date) // Display the date as the label
+                .attr("text-anchor", "middle")
+                .attr("font-size", "10px")
+                .style("opacity", 0);
+
+            node.on("mouseover", (event, node) => {
+                const connectedNodes = getConnectedNodes(node);
+                const transitionDuration = 0; // 500 milliseconds
+
+                title.transition()
+                    .duration(transitionDuration)
+                    .attr("display", d => connectedNodes.includes(d) || d.id === 0 ? "block" : "none");
+
+                rect.transition()
+                    .duration(transitionDuration)
+                    .attr("display", d => connectedNodes.includes(d) || d.id === 0 ? "block" : "none");
+
+                circle.transition()
+                    .duration(transitionDuration)
+                    .attr("fill-opacity", d => connectedNodes.includes(d) || !node.attributes || d.id === 0 ? 1 : 0.2);
+
+                image.transition()
+                    .duration(transitionDuration)
+                    .attr("opacity", d => connectedNodes.includes(d) ? "1" : "0.2");
+
+                link.transition()
+                    .duration(transitionDuration)
+                    .style('stroke-opacity', l => {
+                        if ((connectedNodes.includes(l.target) && l.source == node) || (connectedNodes.includes(l.source) && l.target == node)) {
+                            return '0.8';
+                        } else {
+                            return '0';
+                        }
+                    });
+            });
+
+            node.on("mouseout", function (d) {
+                const transitionDuration = 0;
+
+                title.transition()
+                    .duration(transitionDuration)
+                    .attr("display", d => d.id === 0 ? "block" : "none");
+
+                rect.transition()
+                    .duration(transitionDuration)
+                    .attr("display", d => d.id === 0 ? "block" : "none");
+
+                circle.filter(d => d.id !== 0)
+                    .transition()
+                    .duration(transitionDuration)
+                    .attr("fill-opacity", 0.6);
+
+                image.transition()
+                    .duration(transitionDuration)
+                    .attr("opacity", "1");
+
+                link.transition()
+                    .duration(transitionDuration)
+                    .style("stroke-opacity", '0.2');
+            });
+
+            function handleZoom(e) {
+                // d3.selectAll('.zoom-group')
+                //     .attr('transform', e.transform);
+                // d3.selectAll('line')
+                //     .attr('transform', e.transform);
+                d3.selectAll('g:not(.not-zoomable)')
+                    .attr('transform', e.transform);
+
+                d3.selectAll('line:not(.not-zoomable)')
+                    .attr('transform', e.transform);
+            }
+
+            // Create zoom behavior
+            const zoomBehavior = d3.zoom()
+                .scaleExtent([0.8, 2])
+                .on('zoom', handleZoom);
+
+
+            d3.select('svg').call(zoomBehavior);
+
+            // Tooltip
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0)
+                .style("position", "absolute");
+
+            function handleNodeClick(event, d) {
+                const contentContainer = d3.select("#content-container");
+
+                // Check if content_file is defined before fetching
+                if (d.content_file) {
+                    // Highlight the corresponding dot in red
+                    timeDots.attr("stroke", dot => dot.date === d.date ? "red" : "black");
+                    timeDots.attr("x2", dot => dot.date === d.date ? 60 : 10 + timeDotWidth / 2)
+                    timeLabels.style("opacity", dot => dot.date === d.date ? 1 : 0);
+
+                    // Fetch content from the specified content_file
+                    fetch("subpages/" + d.content_file)
+                        .then(response => response.text())
+                        .then(content => {
+                            // Update the content in the right column
+                            // adjustColumnSpace(document.getElementById('right'));
+                            contentContainer.html(content);
+                            doFlip();
+
+                            // Check if attributes exist and create tags div
+                            if (d.attributes && d.attributes.length) {
+                                const tagsDiv = document.createElement('div');
+                                tagsDiv.className = 'tags';
+                                tagsDiv.textContent = d.attributes.join(', ').toUpperCase();
+
+                                // Append tags after the title div
+                                const titleDiv = contentContainer.select('.title').node();
+                                if (titleDiv) {
+                                    titleDiv.insertAdjacentElement('afterend', tagsDiv);
+                                }
+                            }
+
+                        })
+                        .catch(error => {
+                            console.error("Error fetching content:", error);
+                            contentContainer.html("<p>Error loading content.</p>");
+                        });
+                } else {
+                    // Handle the case where content_file is not defined (central node, for example)
+                    // adjustColumnSpace(document.getElementById('right'));
+
+                    // Display links in the content-container
+                    const connectedLinks = links.filter(link => link.source === d || link.target === d);
+                    const connectedItems = Array.from(new Set(connectedLinks.flatMap(link => [link.source, link.target])));
+
+                    // Clear the content-container
+                    contentContainer.html('');
+
+                    // Add a div with class "title" and the clicked node's name
+                    const titleDiv = contentContainer.append('div').attr('class', 'title');
+                    titleDiv.text(d.id == 0 ? d.title : d.id);
+
+                    // Iterate over connected items and create clickable links with line breaks
+                    connectedItems.forEach((item, index) => {
+                        if (item.content_file) {
+                            const link = contentContainer
+                                .append('a')
+                                .attr('href', '#') // Use '#' as a placeholder initially
+                                .text(item.title); // Use the title if available, else use 'Untitled'
+
+                            // Add click event listener to fetch and load content_file when the link is clicked
+                            link.on('click', () => {
+                                fetch("subpages/" + item.content_file)
+                                    .then(response => response.text())
+                                    .then(content => {
+                                        // Update the content in the content-container
+                                        contentContainer.html(content);
+                                    })
+                                    .catch(error => {
+                                        console.error("Error fetching content:", error);
+                                        contentContainer.html("<p>Error loading content.</p>");
+                                    });
+                            });
+
+                            // Add a line break if it's not the last item
+                            if (index < connectedItems.length - 1) {
+                                contentContainer.append('br');
+                            }
+                        }
+                    });
+                }
+            }
+
+            function handleMouseOver(event, d) {
+                // tooltip.transition()
+                //   .duration(100)
+                //   .style("opacity", .9);
+                // tooltip.html(d.attributes ? d.title : d.id)
+                //   .style("left", (event.pageX + 10) + "px")
+                //   .style("top", (event.pageY - 28) + "px");
+            }
+
+            function handleMouseOut() {
+                // tooltip.transition()
+                //   .duration(500)
+                //   .style("opacity", 0);
+            }
+
+            function handleImageMouseOver(event, d) {
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr('width', d => imgScale)
+                    .attr('height', d => imgScale);
+            }
+
+            function handleImageMouseOut() {
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr('width', d => imgScale)
+                    .attr('height', d => imgScale)
+            }
+
+            // Function to get connected nodes
+            function getConnectedNodes(node) {
+                const connectedNodes = [node];
+
+                // Check links
+                links.forEach(function (link) {
+                    if (link.source === node) {
+                        connectedNodes.push(link.target);
+                    } else if (link.target === node) {
+                        connectedNodes.push(link.source);
+                    }
+                });
+
+                // Remove duplicates by converting to Set and back to Array
+                const uniqueConnectedNodes = Array.from(new Set(connectedNodes));
+
+                console.log("Node:", node);
+                console.log("Node ID:", node.id);
+                console.log("Links:", links);
+                console.log("ForceLinks:", simulation.force("link").links());
+                console.log("Connected Nodes:", uniqueConnectedNodes);
+
+                return uniqueConnectedNodes;
+            }
+
+            function getAttributeNames(node) {
+                const attributeNames = [];
+                links.forEach(function (link) {
+                    if (link.source === node && link.target.attributes) {
+                        attributeNames.push(link.target.id);
+                    }
+                    if (link.target === node && link.source.attributes) {
+                        attributeNames.push(link.source.id);
+                    }
+                });
+                return attributeNames;
+            }
+
+            function showAttributeNames(attributeNames) {
+                attributeNames.forEach(function (name) {
+                    $(name).fadeIn('slow');
+                });
+            }
+
+            node.append("title")
+                .text(d => (d.attributes ? d.title : d.id));
+
+            // Add a drag behavior.
+            node.call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+            // Set the position attributes of links and nodes each time the simulation ticks.
+            function ticked() {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+                image
+                    .attr("x", d => d.x - 30)
+                    .attr("y", d => d.y - 22);
+
+                rect
+                    .attr("x", d => d.x + 10)
+                    .attr("y", d => d.y - 10)
+
+                title
+                    .attr("x", d => d.x)
+                    .attr("y", d => d.y);
+
+                // Update the positions of the dots
+                dots.attr("cx", d => xScale(new Date(d.date)))
+                    .attr("cy", height - 30);
+
+                // Update the positions of the timestamp text elements
+                // timestamp.attr("x", width / 2)
+                //     .attr("y", height / 2);
+
+                circle
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+
+                constrainNodes(nodes, width, height, nodeRadius);
+
+            }
+
+            function constrainNodes(nodes, width, height, radius) {
+                nodes.forEach(node => {
+                    // Constrain x-coordinate
+                    if (!node.attributes) { }
+                    node.x = Math.max(radius, Math.min(width - radius, node.x));
+
+                    // Constrain y-coordinate
+                    node.y = Math.max(radius, Math.min(height - radius, node.y));
+                });
+            }
+
+            // Reheat the simulation when drag starts, and fix the subject position.
+            function dragstarted(event) {
+                if (!event.active) simulation.alphaTarget(0.1).restart();
+                event.subject.fx = event.subject.x;
+                event.subject.fy = event.subject.y;
+            }
+
+            // Update the subject (dragged node) position during drag.
+            function dragged(event) {
+                event.subject.fx = event.x;
+                event.subject.fy = event.y;
+            }
+
+            // Restore the target alpha so the simulation cools after dragging ends.
+            // Unfix the subject position now that it’s no longer being dragged.
+            function dragended(event) {
+                if (!event.active) simulation.alphaTarget(0);
+                event.subject.fx = null;
+                event.subject.fy = null;
+            }
+
+            // document.body.appendChild(svg.node());
+            document.getElementById('left').appendChild(svg.node());
+
+            // Get references to the columns
+            const leftCol = document.getElementById('left');
+            const rightCol = document.getElementById('right');
+
+            // Add click event listeners to each column
+            leftCol.addEventListener('click', function (event) {
+                if (event.target.tagName === 'image') {
+                    // If a node is clicked, call adjustColumnSpace(right)
+                    adjustColumnSpace(leftCol);
+                } else {
+                    adjustColumnSpace(leftCol);
+                }
+            });
+
+            rightCol.addEventListener('click', () => adjustColumnSpace(rightCol));
+
+            // Function to adjust column space
+            function adjustColumnSpace(clickedColumn) {
+                // Reset flex values for all columns
+                leftCol.style.flex = '2';
+                rightCol.style.flex = '2';
+
+                // Increase the flex value for the clicked column
+                clickedColumn.style.flex = '3';
+            }
+        });
+
+
+    </script>
+
+    <script>
+        function doFlip() {
+            if ($('.flipbook').length > 0) {
+                $('.flipbook').turn({
+                    width: 800,
+                    height: 600,
+                    autoCenter: true
+                });
+                $('.flipbook').turn('peel', 'tr');
+            }
         }
-    });
-
-
-
-</script>
+    </script>
 
 </body>
+
 </html>

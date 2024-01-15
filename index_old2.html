@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Björn Keyser</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+  <script src="script.js" defer></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="turnjs4/lib/turn.js"></script>
+</head>
+<body>
+
+<div class="wrapper">
+<div id="overlay" style="display: none;">
+    <img id="overlay-image" src="" alt="Expanded Image">
+</div> 
+   
+  <div class="column" id="bioColumn">
+    <p id="aboutText">
+        <!-- Björn Keyser is a multidisciplinary artist & researcher. 
+            i know, boooo buzzwords, but I simply could never choose between the 2. 
+            My boredom with computer science led me to research [design using code], as well as [data visualization & interaction]. 
+            I also have a lifelong interest in [consciousness] which led me to study the minds of slime molds, fireflies, plants, and humans. 
+            When in doubt of your own consciousness, always remember that we are the only ones capable of creativity, a computer can't be.. or [can it]? -->
+        <span class="title"><a href="./index.html">BJöRN KEYSER</a></span>. I am a student researcher and a designer. I diverged from the path of <br><span data-category="computer-science">[computer science]</span><br> when I found the chaotic creativity of 
+        <br><span data-category="design-code">[design using code]</span><br> and the storytelling power of 
+        <br><span data-category="data-visualization-interaction">[data visualization & interaction]</span>. <br> Fascinated by the enigma of 
+        <br><span data-category="consciousness">[consciousness & intelligence]</span>, <br> I've researched the minds of some hosts: from slime molds to plants to computers to my own brain. 
+        Pondering our consciousness, one might conclude that a computer couldn't possibly share this trait because it lacks creativity... but then, 
+        <br><span data-category="ai-creativity">[does it?]</span>
+        <a href="https://www.instagram.com/bjornze56k" target="_blank" class="instagram-link">
+          <i class="fab fa-instagram"></i>bjornze56k
+        </a>  
+        
+    </p>
+    <!-- Add more bio content here -->
+  </div>
+  <div class="column" id="projectsColumn">
+    <div id="imagePreview" class="project-image-preview"></div> <!-- Container for the image preview -->
+    <div class="data-container">
+        <ul id="projectsList">
+        <!-- Project items will be appended here -->
+            <li class="data-item" data-date="2022-03-24" data-project-id="4">Breath Affects</li>
+            <li class="data-item"  data-date="2021-07-01" data-project-id="8">Flocka</li>
+            <li class="data-item" data-date="2023-10-02" data-project-id="15">Tuner</li>
+            <li class="data-item" data-date="2022-08-10" data-project-id="9">Cyclic Cellular Automata</li>
+            <li class="data-item" data-date="2022-04-26" data-project-id="5">Spatial Whispers</li>
+            <li class="data-item" data-date="2022-06-09" data-project-id="6">Textual Tension</li>
+            <li class="data-item" data-date="2022-08-01" data-project-id="7">metaWHAT!?</li>
+            <li class="data-item" data-date="2023-02-01" data-project-id="11">Screaming Plants</li>
+            <li class="data-item" data-date="2023-07-06" data-project-id="12">Delay Experiment</li>
+            <li class="data-item" data-date="2024-06-04" data-project-id="13">Human Magnetoreception - draft</li>
+            <li class="data-item" data-date="2022-09-26" data-project-id="14">Physarum</li>
+            <li class="data-item" data-date="2022-10-15" data-project-id="1">Blackout Poetry</li>
+            <li class="data-item" data-date="2022-11-02" data-project-id="2">Haikuki</li>
+            <li class="data-item" data-date="2022-12-30" data-project-id="3">Reversing roles</li>
+            <li class="data-item" data-date="2021-07-01" data-project-id="10">Split Learning for Finance</li>
+            <li class="data-item" data-date="2022-09-30" data-project-id="16">Vertical Split Learning</li>
+                    
+        </ul>
+    </div>
+    <div class="timeline"></div>
+  </div>
+  <div class="column" id="detailsColumn">
+    <div id="projectDetails">
+      <!-- Project details will be shown here -->
+    </div>
+  </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Initialize the flipbook
+        if ($('.flipbook').length > 0) {
+            $('.flipbook').turn({
+                // Options for turn.js
+                autoCenter: true
+            });
+        }
+    });
+
+
+
+</script>
+
+</body>
+</html>
