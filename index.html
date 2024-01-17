@@ -7,6 +7,7 @@
     <title>Björn Keyser</title>
     <link rel="stylesheet" href="styles_new.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+
     <!-- <script src="script.js" defer></script> -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="turnjs4/lib/turn.js"></script>
@@ -57,12 +58,6 @@
             z-index: 2;
         }
 
-        .dot {
-            /* fill: #000; */
-            /* r: 4; */
-        }
-
-
         #d3-container {
             position: absolute;
             width: 100%;
@@ -90,9 +85,25 @@
             filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.4));
         }
 
-        /* image {
-            mix-blend-mode: exclusion;
-        } */
+        .fixed-links {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            padding: 5px;
+            display: flex;
+            justify-content: space-evenly;
+            width: 20%;
+        }
+
+        .link-icon i {
+            font-size: 24px;
+            color: black;
+            margin-right: 10px;
+        }
+
+        .link-icon:hover i {
+            color: #ff5733;
+        }
     </style>
 </head>
 
@@ -112,6 +123,18 @@
         </div>
     </div>
 
+    <!-- Fixed link section at the left bottom -->
+    <div class="fixed-links">
+        <a href="https://www.instagram.com/bjornze56k/" class="link-icon">
+            <i class="fab fa-instagram"></i>
+        </a>
+        <a href="Content/CV 2024.pdf" class="link-icon">
+            <i class="far fa-file-pdf"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/bjornkeyser/" class="link-icon">
+            <i class="fab fa-linkedin-in"></i>
+        </a>
+    </div>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Portfolio data with added attributes
@@ -245,7 +268,7 @@
             const simulation = d3.forceSimulation(nodes)
                 .force("link", d3.forceLink(links).id(d => d.id))
                 // .force('charge', d3.forceManyBody().strength(customCharge))
-                .force('charge', d3.forceManyBody().strength(-350))
+                .force('charge', d3.forceManyBody().strength(-450))
                 .force("center", d3.forceCenter(width / 2, height / 2))
                 .force("collide", d3.forceCollide().radius(40).strength(0.5)) // Adjust radius and strength as needed
                 .force("x", d3.forceX().strength(0.1).x(d => Math.min(width - 10, Math.max(10, d.x))))
